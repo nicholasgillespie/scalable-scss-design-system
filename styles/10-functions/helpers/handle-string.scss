@@ -1,0 +1,136 @@
+/**
+ * Function: abbreviate
+ * Creates an abbreviation from a string by taking the first letter of each
+ * word.
+ *
+ * @param {String} $string - The string to abbreviate.
+ * @return {String} - The resulting abbreviation.
+ */
+@function abbreviate($string) {
+  $abbreviation: "";
+  $words: stringToList($string, "-");
+  @each $word in $words {
+    $abbreviation: $abbreviation + str-slice($word, 1, 1);
+  }
+  @return $abbreviation;
+}
+
+/**
+ * Function: listToString
+ * Converts a list to a string, joining elements with a specified delimiter.
+ *
+ * @param {List} $list - The list of elements to join.
+ * @param {String} $delimiter - The delimiter to use for joining.
+ * @return {String} - The resulting string.
+ */
+@function listToString($list, $delimiter) {
+  $result: "";
+  @each $item in $list {
+    $result: $result + $item + $delimiter;
+  }
+  $result: str-slice($result, 1, str-length($result) - str-length($delimiter));
+  @return $result;
+}
+
+/**
+ * Function: slugify
+ * Converts a string to a URL-friendly slug by replacing spaces and disallowed
+ * characters.
+ *
+ * @param {String} $string - The string to convert.
+ * @return {String} - The resulting slug.
+ */
+@function slugify($string) {
+  $string: stringReplace($string, " - ", "-");
+  $disallowed: "'\"!@#$%^&*()+=[]{}|;:,.<>?/`~"; // Add any other disallowed
+  // characters here
+
+  $result: "";
+
+  @for $i from 1 through str-length($string) {
+    $char: str-slice($string, $i, $i);
+    @if not str-index($disallowed, $char) {
+      $result: $result + $char;
+    }
+  }
+
+  @return to-lower-case(stringReplace($result, " ", "-"));
+}
+
+/**
+ * Function: stringReplace
+ * Replaces all occurrences of a substring within a string with another
+ * substring.
+ *
+ * @param {String} $string - The string to modify.
+ * @param {String} $search - The substring to search for.
+ * @param {String} $replace - The substring to replace with.
+ * @return {String} - The resulting string.
+ */
+@function stringReplace($string, $search, $replace: "") {
+  $index: str-index($string, $search);
+
+  @if $index {
+    @return str-slice($string, 1, $index - 1) + $replace +
+      stringReplace(
+        str-slice($string, $index + str-length($search)),
+        $search,
+        $replace
+      );
+  }
+
+  @return $string;
+}
+
+/**
+ * Function: stringToList
+ * Converts a string to a list, splitting by a specified delimiter.
+ *
+ * @param {String} $string - The string to split.
+ * @param {String} $delimiter - The delimiter to use for splitting.
+ * @return {List} - The resulting list.
+ */
+@function stringToList($string, $delimiter) {
+  $index: str-index($string, $delimiter);
+  $result: ();
+
+  @while $index {
+    $part: str-slice($string, 1, $index - 1);
+    $result: append($result, $part);
+    $string: str-slice($string, $index + str-length($delimiter));
+    $index: str-index($string, $delimiter);
+  }
+
+  $result: append($result, $string);
+  @return $result;
+}
+
+/**
+ * Function: stringTrimAfter
+ * Trims a string after a specified delimiter and count, returning the
+ * remaining part.
+ *
+ * @param {String} $string - The string to trim.
+ * @param {String} $delimiter - The delimiter to use for trimming.
+ * @param {Number} $count - The number of occurrences to keep before trimming.
+ * @return {String} - The resulting trimmed string.
+ */
+@function stringTrimAfter($string, $delimiter, $count) {
+  $parts: stringToList($string, $delimiter);
+  $numParts: length($parts);
+
+  @if $numParts <= $count {
+    @return "";
+  }
+
+  $result: "";
+  @for $i from $count + 1 through $numParts {
+    @if $result == "" {
+      $result: nth($parts, $i);
+    } @else {
+      $result: $result + $delimiter + nth($parts, $i);
+    }
+  }
+
+  @return $result;
+}

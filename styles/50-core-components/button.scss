@@ -1,0 +1,90 @@
+// @use "../10-functions/theme-accessor" as *;
+
+.button {
+  --button-x-padding: 2.5em;
+  --button-y-padding: 1.3em;
+  // --button-border-color: #{get(color, grayish-dark-blue)};
+
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0ch;
+  position: relative;
+  padding: var(--button-padding, 0);
+  cursor: pointer;
+  text-decoration: none;
+  border: var(
+    --button-border,
+    solid var(--border-width, medium) var(--button-border-color, transparent)
+  );
+  border-radius: var(--button-radius, 0em);
+  font-size: get(font-size, -2);
+  font-family: get(font-family, base);
+  // font-weight: get(font-weight, semi-bold);
+  line-height: get(line-height, flat);
+  letter-spacing: get(letter-spacing, extra-loose);
+  text-transform: uppercase;
+  background-color: var(--button-bg, transparent);
+  // color: var(--button-text, get(color, grayish-dark-blue));
+  min-inline-size: fit-content;
+
+  & span {
+    padding: var(--button-y-padding) var(--button-x-padding);
+    display: flex;
+  }
+
+  &:hover,
+  &:focus-visible {
+    & span {
+      // background-color: get(color, grayish-dark-blue);
+      // background-color: var(--button-bg, #{get(color, grayish-dark-blue)});
+      // color: get(color, very-light-grey);
+    }
+
+    & svg {
+      // background-color: get(background-color, almost-black);
+    }
+  }
+
+  /* Default variant is primary, so no additional styles needed for it */
+  /* VARIANTS */
+  &[data-button-variant="secondary"] {
+    & span {
+      padding-inline-end: var(--button-x-padding);
+      padding-inline-start: calc(var(--button-x-padding) * 3.5);
+    }
+
+    & svg {
+      position: absolute;
+      inset-inline-start: 0;
+    }
+  }
+
+  &[data-button-variant="special"] {
+    // background-color: get(color, dark-blue);
+    // color: get(color, very-light-grey);
+
+    & span:has(svg) {
+      color: #5fb4a2;
+      background-color: #1d3444;
+      padding: var(--button-y-padding) calc(var(--button-x-padding) / 1.75);
+    }
+
+    & svg {
+      block-size: 1em;
+      inline-size: 2ch;
+    }
+
+    // Hover styles
+    &:hover,
+    &:focus-visible {
+      --button-bg: #5fb4a2;
+      --button-border-color: #55a292;
+
+      & span:has(svg) {
+        // color: get(color, very-light-grey);
+        background-color: #55a292;
+      }
+    }
+  }
+}

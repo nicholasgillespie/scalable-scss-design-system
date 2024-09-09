@@ -1,0 +1,40 @@
+/*
+ * SIDEBAR
+ * A layout that provides a flexible sidebar and main content area.
+ * Info: https://every-layout.dev/layouts/sidebar/
+ * 
+ * CUSTOM PROPERTIES AND CONFIGURATION
+ * --sidebar-target-width: The preferred width of the sidebar.
+ * --sidebar-content-min-width: The minimum width of the main content area.
+ * --sidebar-vertical-alignment: The vertical alignment of the sidebar and main
+ * content.
+ * --space-sidebar: The space between the sidebar and the main content.
+ * 
+ * A data attribute [data-sidebar="rtl"] can be used to reverse the direction of
+ * the layout.
+ */
+
+@use "../00-settings/theme-config" as *;
+$prefix: map-get($class-type-prefixes, layouts);
+
+.#{$prefix}sidebar {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: var(--sidebar-vertical-alignment, stretch);
+  gap: var(--space-sidebar, var(--space-gutter));
+
+  & > :where(.sidebar, :first-child) {
+    flex-basis: var(--sidebar-target-width, 20rem);
+    flex-grow: 1;
+  }
+
+  & > :where(.not-sidebar, :last-child) {
+    flex-basis: 0;
+    flex-grow: 999;
+    min-inline-size: var(--sidebar-content-min-width, 60%);
+  }
+
+  &[data-sidebar="rtl"] {
+    flex-direction: row-reverse;
+  }
+}

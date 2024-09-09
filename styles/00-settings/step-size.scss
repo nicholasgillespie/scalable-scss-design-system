@@ -1,0 +1,73 @@
+/*
+ * FILE: step-size.scss
+ *
+ * This file defines the step sizes used in the project with min and max values 
+ * for responsive scaling. These steps are used to calculate the actual font sizes.
+ *
+ * The `items` map includes:
+ *  - Step size name (e.g., "-2", "0", "5")
+ *  - Corresponding min and max values for responsive scaling
+ *
+ * All values are defined in pixels. The conversion to `px` or `rem` is handled 
+ * by the `processClamp` function in the `10-functions/process-clamp.scss` file.
+ *
+ * For each step, a min and max value are defined, and the size adjusts based on 
+ * the viewport width.
+ *
+ * The following settings are defined in the `process-clamp.scss` file:
+ *  - `unit-type`: Defines the unit type for the step sizes (e.g., "px", "rem").
+ *  - `relative-unit-type`: Defines the relative unit type for viewport-based 
+ *    scaling (e.g., "vw", "vi").
+ */
+
+$token: (
+  "title": "Scale Text",
+  "description":
+    "Defines step sizes with min and max values for responsive scaling.",
+  "meta": (
+    "scaleGenerator":
+      "https://utopia.fyi/type/calculator?c=320,18,1.2,800,20,1.25,5,2,&s=0.75|0.5|0.25,1.5|2|3|4|6,s-l&g=s,l,xl,12",
+  ),
+  "items": (
+    (
+      "name": "-2",
+      "min": 12.5,
+      "max": 12.8,
+    ),
+    (
+      "name": "-1",
+      "min": 15,
+      "max": 16,
+    ),
+    (
+      "name": "0",
+      "min": 18,
+      "max": 20,
+    ),
+    (
+      "name": "1",
+      "min": 21.6,
+      "max": 25,
+    ),
+    (
+      "name": "2",
+      "min": 25.92,
+      "max": 31.25,
+    ),
+    (
+      "name": "3",
+      "min": 31.1,
+      "max": 39.06,
+    ),
+    (
+      "name": "4",
+      "min": 37.32,
+      "max": 48.83,
+    ),
+    (
+      "name": "5",
+      "min": 44.79,
+      "max": 61.04,
+    ),
+  ),
+);

@@ -1,0 +1,17 @@
+// Info: https://www.w3.org/WAI/WCAG22/quickref/?versions=2.1#bypass-blocks
+
+#skip-link {
+  // Position the skip link off-screen
+  position: absolute;
+  inset-block-start: -100vh;
+
+  // When focused, bring the skip link back into view
+  &:focus-visible {
+    inset-block-start: var(--space-gutter, 1rem);
+    inset-inline-start: var(--space-gutter, 1rem);
+  }
+
+  // Style the skip link
+  inline-size: max-content;
+  z-index: 999;
+}

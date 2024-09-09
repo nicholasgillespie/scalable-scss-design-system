@@ -1,0 +1,382 @@
+/*
+ * FILE: _theme-applier.scss
+ *
+ * This file contains mixins for applying theme tokens, generating CSS variables,
+ * and creating utility classes based on the theme configuration.
+ * 
+ * MIXINS:
+ * - generateThemeVariables: Applies tokens for a specified type or all types if
+ *   no type is specified.
+ * - generateTokenVariables: Generates CSS custom properties for a specific token,
+ *   optionally processing values with a function.
+ * - generateThemeUtilities: Generates utility classes for theme tokens.
+ * - generateThemeSpacingUtilities: Generates custom utility classes for theme
+ *   tokens.
+ *
+ * VARIABLES:
+ * - $token-type: Maps different token types and their associated keys.
+ * - $exception-exclude-base-suffix: List of tokens excluding the base suffix from
+ *   CSS custom property names.
+ * - $exception-utility-properties: Defines exceptions for certain properties,
+ *   allowing alternative names and modifications to the property.
+ * - $custom-utility-prefixes: List of custom utility class prefixes.
+ */
+
+// Import theme configuration and tokens
+@use "../00-settings/theme-config" as config;
+@use "../00-settings/color-theme" as color;
+
+// Import functions for generating variables
+@use "../10-functions/select-theme" as *;
+@use "../10-functions/transform-color-p3" as *;
+
+// Import helper functions
+@use "../10-functions/helpers/handle-string" as help-str;
+
+// Define token types and their associated keys
+$token-type: (
+  "global": (
+    "palette",
+    "spacing",
+    "step-size",
+    "font-family",
+    "font-weight",
+    "line-height",
+    "letter-spacing",
+    "radius",
+    "layout",
+    "measure",
+  ),
+  "contextual-generic": (
+    "theme",
+    "text-size",
+    "space-gutter",
+    "space-region",
+  ),
+  "component-specific": (),
+  "contextual-content": (),
+);
+
+// List of tokens excluding the base suffix from CSS custom property names
+$exception-exclude-base-suffix: (
+  "line-height",
+  "letter-spacing",
+  "radius",
+  "measure",
+  "space-gutter",
+  "space-region"
+);
+
+// Define exceptions for properties, allowing alternative names and mods
+$exception-utility-properties: (
+  "color": (
+    "alt-name": "text",
+    "alt-property": "color",
+  ),
+  "background-color": (
+    "alt-name": "background",
+    "alt-property": "background-color",
+  ),
+  "border-color": (
+    "alt-name": "border",
+    "alt-property": "border-color",
+  ),
+  "font-size": (
+    "alt-name": "text-size",
+    "alt-property": "font-size",
+  ),
+  "font-family": (
+    "alt-name": "font",
+    "alt-property": "font-family",
+  ),
+);
+
+// List of custom utility class prefixes
+$custom-utility-prefixes: (
+  // "space-box",
+  "space-cluster",
+  // "space-columns",
+  // "space-cover",
+  // "space-flow",
+  // "space-grid",
+  // "space-gutter",
+  // "space-region",
+  // "space-repel",
+  // "space-sidebar",
+  // "space-stack",
+  // "space-switcher"
+);
+
+// Retrieve the class type prefix for utilities
+$class-type-prefix: map-get(config.$class-type-prefixes, utilities);
+
+/**
+ * Mixin: generateThemeVariables
+ * Applies tokens for a specified type or all types if no type is specified.
+ *
+ * @param {String|null} $type - Type of tokens to apply (e.g., "global", "ctx").
+ */
+@mixin generateThemeVariables($type: null) {
+  @each $current-type, $keys in $token-type {
+    // Check if $type is null or matches the current type
+    @if $type == null or $type == $current-type {
+      @each $group in config.$groups {
+        $group-token-key: map-get($group, "key");
+
+        // Check if $group-token-key exists in $token-type under $type
+        @if index($keys, $group-token-key) {
+          @include generateTokenVariables($group-token-key);
+        }
+      }
+    }
+  }
+}
+
+/**
+ * Mixin: generateTokenVariables
+ * Generates CSS custom properties for a specific token.
+ *
+ * @param {String} $group-token-key - The token group key to generate vars.
+ * @param {Function|null} $function - Optional function to process values.
+ * @param {String|null} $function-arg - Optional argument for the function.
+ */
+@mixin generateTokenVariables(
+  $group-token-key,
+  $function: null,
+  $function-arg: null
+) {
+  // Handle exceptions for the theme group-token-key
+  @if $group-token-key == "theme" {
+    @if $function == null {
+      $function: "selectTheme";
+    }
+    @if $function-arg == null {
+      $first-item-name: to-lower-case(
+        nth(map-get(nth(map-get(color.$token, "items"), 1), "name"), 1)
+      );
+      $function-arg: $first-item-name;
+    }
+  }
+
+  // Loop through each group in the theme configuration
+  @each $group in config.$groups {
+    $group-key: map-get($group, "key");
+
+    // Check if the current group matches the provided token key
+    @if $group-key == $group-token-key {
+      $group-prefix: help-str.slugify(map-get($group, "prefix"));
+      $items: map-get(config.$theme, $group-token-key);
+
+      // Loop through each item in the token
+      @each $item-name, $item-value in $items {
+        // Initialize result
+        $result: null;
+
+        // Apply function if provided and exists
+        @if $function and function-exists($function) {
+          $result: call(
+            get-function($function),
+            $item-name,
+            $item-value,
+            if($function-arg != null, to-lower-case($function-arg), null)
+          );
+        } @else {
+          // Warn if function not found, return item name and value without fn
+          @if $function and not function-exists($function) {
+            @warn "Invalid function `#{$function}`.";
+          }
+          $result: (
+            name: $item-name,
+            value: $item-value,
+          );
+        }
+
+        // Check if $result is not null
+        @if $result != null {
+          $item-name: map-get($result, "name");
+          $item-value: map-get($result, "value");
+
+          // Generate CSS custom properties, handling base exceptions
+          @if $item-value != null {
+            @if $item-name ==
+              "base" and
+              index($exception-exclude-base-suffix, $group-token-key)
+            {
+              --#{$group-prefix}: #{$item-value};
+            } @else {
+              --#{$group-prefix}-#{$item-name}: #{$item-value};
+            }
+          }
+        }
+      }
+    }
+  }
+}
+
+/**
+ * Mixin: generateThemeUtilities
+ * Generates utility classes for theme tokens.
+ */
+@mixin generateThemeUtilities() {
+  // Loop through each group in the theme configuration
+  @each $group in config.$groups {
+    $group-key: map-get($group, "key");
+    $group-prefix: map-get($group, "prefix");
+    $group-properties: map-get($group, "properties");
+    $items: map-get(config.$theme, $group-key);
+
+    // Check if the group has properties defined
+    @if $group-properties != null {
+      // Loop through each property in the group
+      @each $group-property in $group-properties {
+        $property-or-alt-name: $group-property;
+        $css-property: $group-property;
+
+        // Check if the property is in exception-utility-properties
+        @if map-has-key($exception-utility-properties, $group-property) {
+          $property-or-alt-name: map-get(
+            map-get($exception-utility-properties, $group-property),
+            "alt-name"
+          );
+          $css-property: map-get(
+            map-get($exception-utility-properties, $group-property),
+            "alt-property"
+          );
+        }
+
+        // Handle exceptions for specific groups
+        @if $group-key == "palette" {
+          @if $group-property == "color" {
+            @if map-has-key($exception-utility-properties, "color") {
+              $property-or-alt-name: $group-prefix;
+            }
+          }
+        }
+
+        // Generate utility classes for auto and zero spacing
+        @if $group-key == "spacing" {
+          // // Uncomment to enable abbreviated property names
+          // $property-or-alt-name: help-str.abbreviate(
+          //   help-str.listToString($group-property, "-")
+          // );
+
+          .#{$class-type-prefix}#{$property-or-alt-name}-auto {
+            #{$css-property}: auto;
+          }
+          .#{$class-type-prefix}#{$property-or-alt-name}-zero {
+            #{$css-property}: 0;
+          }
+        }
+
+        // Handle exceptions for the scale-text group
+        @if $group-key == "step-size" {
+          @if $group-property == "font-size" {
+            @if map-has-key($exception-utility-properties, "font-size") {
+              $property-or-alt-name: $group-prefix;
+            }
+          }
+        }
+
+        // Process theme group items
+        @if $group-key == "theme" {
+          // Extract theme names from the color.$token map
+          $themes: ();
+          @each $item in map-get(color.$token, "items") {
+            $theme-name: to-lower-case(map-get($item, "name"));
+            $themes: append($themes, $theme-name);
+          }
+
+          // Remove theme prefixes from item names
+          $processed-items: ();
+          @each $item-name, $value in $items {
+            @each $theme-name in $themes {
+              @if str-index($item-name, "#{$theme-name}-") {
+                $item-name: help-str.stringReplace(
+                  $item-name,
+                  "#{$theme-name}-",
+                  ""
+                );
+              }
+            }
+            // Merge the modified item name and value into $processed-items map
+            $processed-items: map-merge(
+              $processed-items,
+              (
+                $item-name: $value,
+              )
+            );
+          }
+          $items: $processed-items;
+        }
+
+        // Loop through each item in the token
+        @each $item-name in map-keys($items) {
+          // Handle theme group items
+          @if $group-key == "theme" {
+            $item-name-prop: nth(help-str.stringToList($item-name, "-"), 1);
+            $item-name: help-str.stringReplace(
+              $item-name,
+              "#{$item-name-prop}-",
+              ""
+            );
+
+            // Generate utility class for theme items
+            @if $property-or-alt-name == $item-name-prop {
+              .#{$class-type-prefix}#{$property-or-alt-name}-#{$item-name} {
+                #{$css-property}: var(
+                  --#{$group-prefix}-#{$property-or-alt-name}-#{$item-name}
+                );
+              }
+            }
+          } @else {
+            // Handle base property exceptions
+            @if $item-name ==
+              "base" and
+              index($exception-exclude-base-suffix, $group-key)
+            {
+              .#{$class-type-prefix}#{$property-or-alt-name}-base {
+                #{$css-property}: var(--#{$group-prefix});
+              }
+            } @else {
+              // Generate utility class for non-theme items
+              .#{$class-type-prefix}#{$property-or-alt-name}-#{$item-name} {
+                #{$css-property}: var(--#{$group-prefix}-#{$item-name});
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+}
+
+/**
+ * Mixin: generateThemeSpacingUtilities
+ * Generates custom utility classes for theme tokens.
+ */
+@mixin generateThemeSpacingUtilities() {
+  // Get the token and prefix for spacing
+  $token-name: "spacing";
+  $token: map-get(config.$theme, $token-name);
+  $token-prefix: null;
+
+  // Find the prefix for the token
+  @each $group in config.$groups {
+    @if map-get($group, "key") == $token-name {
+      $token-prefix: map-get($group, "prefix");
+    }
+  }
+
+  // If the token and prefix are found, generate the custom utility classes
+  @if $token != null and $token-prefix != null {
+    @each $prefix in $custom-utility-prefixes {
+      $property: "--#{$prefix}";
+
+      @each $item-name, $item-value in $token {
+        .#{$class-type-prefix}#{$prefix}-#{$item-name} {
+          #{$property}: var(--#{$token-prefix}-#{$item-name});
+        }
+      }
+    }
+  }
+}

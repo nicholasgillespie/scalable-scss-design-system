@@ -1,0 +1,20 @@
+@use "../00-settings/theme-config" as *;
+$prefix: map-get($class-type-prefixes, utilities);
+
+.#{$prefix}emphasise {
+  position: relative;
+  font-style: normal;
+  text-wrap: nowrap;
+
+  &:after {
+    content: "";
+    position: absolute;
+    inset-inline-start: 0px;
+    inset-block-end: 0.04ex;
+    transform: translate(0%, -50%);
+    inline-size: 100%;
+    block-size: 6px;
+    background-color: var(--color-green);
+    z-index: -1;
+  }
+}

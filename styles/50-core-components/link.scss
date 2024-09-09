@@ -1,0 +1,22 @@
+.link {
+  display: inline-block;
+  cursor: pointer;
+  background: transparent;
+  color: var(--color-french-rose);
+  text-decoration: none;
+  text-underline-offset: 0;
+
+  &:hover,
+  &:focus-visible {
+    text-decoration: none;
+    color: var(--color-cherry-blossom-pink);
+  }
+
+  &[aria-current="page"] {
+    //
+  }
+
+  & > img {
+    display: inline-block;
+  }
+}

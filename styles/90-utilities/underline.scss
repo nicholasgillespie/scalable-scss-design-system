@@ -1,0 +1,11 @@
+@use "../00-settings/theme-config" as *;
+$prefix: map-get($class-type-prefixes, utilities);
+
+.#{$prefix}underline {
+  text-decoration-line: underline;
+  text-decoration-color: var(--color-green);
+  text-decoration-style: solid;
+  text-decoration-thickness: 0.25ex;
+  text-underline-offset: 0.3ex;
+  text-decoration-skip-ink: none;
+}

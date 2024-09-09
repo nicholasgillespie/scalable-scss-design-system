@@ -1,0 +1,40 @@
+/*
+ * FILE: color-palette.scss
+ *
+ * This file defines the color palette used in the project.
+ *
+ * The `items` map includes:
+ *  - Color category name (e.g., "Core", "Shades")
+ *  - Corresponding color values for each category
+ *
+ * For P3 conversion, use hexadecimal, RGB, or RGBA formats. Conversion is 
+ * applied within a feature query checking for P3 gamut support, defined in 
+ * the `30-base/root.scss` file.
+ */
+
+$token: (
+  "title": "Color Palette",
+  "description": "Centralizes all project colors. Accepts all color formats.",
+  "items": (
+    (
+      "name": "Core",
+      "value": (
+        "Primary": #7552c7,
+        "Secondary": #8aac39,
+      ),
+    ),
+    (
+      "name": "Shades",
+      "value": (
+        "Dark": #000000,
+        "Dim": #242424,
+        "Charcoal": #494949,
+        "Gray": #6d6d6d,
+        "Gray Bright": #929292,
+        "Gray Glare": #b6b6b6,
+        "Light": #dbdbdb,
+        "Light Bright": #ffffff,
+      ),
+    ),
+  ),
+);

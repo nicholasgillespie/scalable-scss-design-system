@@ -1,0 +1,32 @@
+/**
+ * Function: prefixItems
+ * Prefixes each key in the list with the specified prefix.
+ *
+ * @param {String} $prefix - The prefix to add to each key.
+ * @param {List} $keys - The list of keys to prefix.
+ * @return {List} - The list of prefixed keys.
+ */
+@function prefixItems($prefix, $keys) {
+  $result: ();
+  @each $key in $keys {
+    $result: append($result, $prefix + $key);
+  }
+  @return $result;
+}
+
+/**
+ * Function: unique
+ * Removes duplicates from a list.
+ *
+ * @param {List} $list - The list to remove duplicates from.
+ * @return {List} - The list with duplicates removed.
+ */
+@function unique($list) {
+  $uniqueList: ();
+  @each $item in $list {
+    @if not index($uniqueList, $item) {
+      $uniqueList: append($uniqueList, $item, comma);
+    }
+  }
+  @return $uniqueList;
+}

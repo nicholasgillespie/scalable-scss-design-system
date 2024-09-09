@@ -1,0 +1,27 @@
+/*
+ * FRAME
+ * A layout that provides a container with a fixed aspect ratio.
+ * Info: https://every-layout.dev/layouts/frame/
+ * 
+ * CUSTOM PROPERTIES AND CONFIGURATION
+ * --frame-width: The width of the frame.
+ * --frame-height: The height of the frame.
+ */
+
+@use "../00-settings/theme-config" as *;
+$prefix: map-get($class-type-prefixes, layouts);
+
+.#{$prefix}frame {
+  aspect-ratio: var(--frame-width, 16) / var(--frame-height, 9);
+  overflow: hidden;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+
+  & > img,
+  & > video {
+    block-size: 100%;
+    inline-size: 100%;
+    object-fit: cover;
+  }
+}

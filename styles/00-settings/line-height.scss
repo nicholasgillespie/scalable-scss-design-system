@@ -1,0 +1,42 @@
+/*
+ * FILE: line-height.scss
+ *
+ * This file defines the line-height values used in the project.
+ *
+ * The `items` map includes:
+ *  - Line-height name (e.g., "Flat", "Loose")
+ *  - Corresponding numeric value for the line-height
+ */
+
+$token: (
+  "title": "Line height",
+  "description": "Defines the line-height values used in the project.",
+  "items": (
+    (
+      "name": "Base",
+      "value": 1.5,
+      // Comfortable baseline for body text
+    ),
+    (
+      "name": "Flat",
+      "value": 1,
+      // Tighter for headings and compact text
+    ),
+    (
+      "name": "Fine",
+      "value": 1.15,
+      // Slightly tighter than standard, for improved readability in short texts
+    ),
+    (
+      "name": "Loose",
+      "value": 1.7,
+      // More open, for longer reads or special sections
+    ),
+    // (
+    //   "name": "Extra Loose",
+    //   "value": 2,
+    //   // Much looser, for headings or special text where additional spacing is
+    //   // beneficial
+    // ),,
+  ),
+);

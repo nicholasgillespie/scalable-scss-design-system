@@ -1,0 +1,200 @@
+/*
+ * FILE: _theme-config.scss
+ *
+ * This file serves as the central hub for design tokens in the project.
+ * It imports raw design tokens (e.g., colors, spacing, typography) and
+ * processes them using various formatting and conversion functions.
+ * The processed tokens are then consolidated into a centralized `$theme`
+ * map, providing a consistent source of truth across the project.
+ * 
+ * VARIABLES:
+ * - $theme: A map consolidating all processed tokens.
+ * - $groups: Defines token groups with keys, prefixes, and properties.
+ * - $class-type-prefixes: Defines prefixes for different class types.
+ * 
+ * The $groups map is crucial for organizing tokens, generating CSS custom
+ * properties, creating utility classes, and retrieving values using the `get`
+ * function in the `10-functions/_theme-accessor.scss` file. Each group includes:
+ * - key: Identifies the token group (e.g., "palette", "theme").
+ * - prefix: Generates CSS variable names (e.g., "color", "space").
+ * - properties: Specifies CSS properties for utility classes and retrieval.
+ */
+
+// Import design tokens
+@use "./viewport" as viewport;
+@use "./color-palette" as palette;
+@use "./color-theme" as color;
+@use "./spacing" as spacing;
+@use "./step-size" as step-size;
+@use "./text-size" as text-size;
+@use "./font-family.scss" as font-family;
+@use "./font-weight.scss" as font-weight;
+@use "./line-height" as line-height;
+@use "./letter-spacing" as letter-spacing;
+@use "./radius.scss" as radius;
+@use "./measure" as measure;
+@use "./space-gutter" as space-gutter;
+@use "./space-region" as space-region;
+
+// Import functions
+@use "../10-functions/process-token" as *;
+@use "../10-functions/process-clamp" as *;
+
+// Import helper functions
+@use "../10-functions/helpers/handle-list" as help-lst;
+@use "../10-functions/helpers/handle-string" as help-str;
+@use "../10-functions/helpers/handle-number" as help-num;
+@use "../10-functions/helpers/provide-value" as help-pvd;
+
+// Format token items
+$viewport: processToken(viewport.$token);
+$palette: processToken(palette.$token);
+$color: processToken(color.$token);
+$spacing: processToken(processClamp(spacing.$token, $viewport));
+$step-size: processToken(processClamp(step-size.$token, $viewport));
+$text-size: processToken(text-size.$token);
+$font-family: processToken(font-family.$token);
+$font-weight: processToken(font-weight.$token);
+$line-height: processToken(line-height.$token);
+$letter-spacing: processToken(letter-spacing.$token);
+$radius: processToken(radius.$token);
+$measure: processToken(measure.$token);
+$space-gutter: processToken(space-gutter.$token);
+$space-region: processToken(space-region.$token);
+
+// Unit of measurement used in the theme
+$unit: "rem";
+
+// Consolidate tokens into a centralized map
+$theme: (
+  "layout": (
+    "base-max": #{map-get($viewport, "max")}#{$unit},
+  ),
+  "breakpoints": (
+    "mobile": #{map-get($viewport, "min")}#{$unit},
+    "tablet": #{map-get($viewport, "mid")}#{$unit},
+    "desktop": #{map-get($viewport, "lrg")}#{$unit},
+    "widescreen": #{map-get($viewport, "max")}#{$unit},
+  ),
+  "palette": $palette,
+  "theme": $color,
+  "spacing": $spacing,
+  "step-size": $step-size,
+  "text-size": $text-size,
+  "font-family": $font-family,
+  "font-weight": $font-weight,
+  "line-height": $line-height,
+  "letter-spacing": $letter-spacing,
+  "radius": $radius,
+  "measure": $measure,
+  "space-gutter": $space-gutter,
+  "space-region": $space-region,
+);
+
+// Define token groups
+$groups: (
+  (
+    key: "palette",
+    prefix: "color",
+    properties: (
+      "color",
+      "background-color",
+    ),
+  ),
+  (
+    key: "theme",
+    prefix: "color",
+    properties: (
+      "color",
+      "background-color",
+    ),
+  ),
+  (
+    key: "spacing",
+    prefix: "space",
+    properties:
+      join(
+        help-lst.prefixItems("margin", help-pvd.logicalSuffixes()),
+        help-lst.prefixItems("padding", help-pvd.logicalSuffixes()),
+        comma
+      ),
+  ),
+  (
+    key: "space-gutter",
+    prefix: "space-gutter",
+    properties: (),
+  ),
+  (
+    key: "space-region",
+    prefix: "space-region",
+    properties: (),
+  ),
+  (
+    key: "step-size",
+    prefix: "step-size",
+    properties: (
+      "font-size",
+    ),
+  ),
+  (
+    key: "text-size",
+    prefix: "text-size",
+    properties: (
+      "font-size",
+    ),
+  ),
+  (
+    key: "font-family",
+    prefix: "font",
+    properties: (
+      "font-family",
+    ),
+  ),
+  (
+    key: "font-weight",
+    prefix: "font",
+    properties: (
+      "font-weight",
+    ),
+  ),
+  (
+    key: "line-height",
+    prefix: "leading",
+    properties: (
+      "line-height",
+    ),
+  ),
+  (
+    key: "letter-spacing",
+    prefix: "kerning",
+    properties: (
+      "letter-spacing",
+    ),
+  ),
+  (
+    key: "radius",
+    prefix: "radius",
+    properties: (
+      "border-radius",
+    ),
+  ),
+  (
+    key: "measure",
+    prefix: "measure",
+    properties: (
+      "max-inline-size",
+    ),
+  ),
+  (
+    key: "layout",
+    prefix: "layout",
+    properties: (),
+  )
+);
+
+// Define class type prefixes
+$class-type-prefixes: (
+  layouts: "l-",
+  components: "",
+  utilities: "u-",
+);

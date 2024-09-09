@@ -1,0 +1,34 @@
+/*
+ * REPEL
+ * A layout that pushes items away from each other where there is space in the
+ * viewport and stacks on small viewports.
+ * Info: https://set.studio/
+ * 
+ * CUSTOM PROPERTIES AND CONFIGURATION
+ * --repel-vertical-alignment: How items should align vertically.
+ * --space-repel: The space between each item.
+ * 
+ * A data attribute [data-repel="nowrap"] can be used to prevent items from
+ * wrapping onto the next line.
+ */
+
+@use "../00-settings/theme-config" as *;
+$prefix: map-get($class-type-prefixes, layouts);
+
+.#{$prefix}repel {
+  display: flex;
+  flex-direction: var(--repel-direction, row);
+  flex-wrap: var(--repel-wrap, wrap);
+  justify-content: var(--repel-horizontal-alignment, space-between);
+  align-items: var(--repel-vertical-alignment, center);
+  gap: var(--space-repel, var(--space-gutter));
+
+  &[data-repel="nowrap"] {
+    flex-wrap: nowrap;
+  }
+
+  &[data-repel="vertical"] {
+    --repel-vertical-alignment: stretch;
+    --repel-direction: column;
+  }
+}

@@ -1,0 +1,32 @@
+/*
+ * FILE: radius.scss
+ *
+ * This file defines the border radius values used in the project.
+ *
+ * The `items` map includes:
+ *  - Border radius name (e.g., "Small", "Medium", "Large")
+ *  - Corresponding value for the border radius
+ */
+
+$token: (
+  "title": "Border Radius",
+  "description": "Defines the border radius values used in the project.",
+  "items": (
+    (
+      "name": "Base",
+      "value": 0.5em,
+    ),
+    // (
+    //   "name": "S",
+    //   "value": 0.75em,
+    // ),
+    // (
+    //   "name": "M",
+    //   "value": 1em,
+    // ),
+    // (
+    //   "name": "L",
+    //   "value": 2em,
+    // ),,
+  ),
+);

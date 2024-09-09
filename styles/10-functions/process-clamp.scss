@@ -1,0 +1,140 @@
+/*
+ * FILE: process-clamp.scss
+ *
+ * This file contains functions for generating clamp() values for design tokens.
+ * 
+ * FUNCTIONS:
+ * - processClamp: Processes the token, retrieves items, and generates clamp()
+ *   values for each item.
+ * - generateClamp: Generates the clamp() value for a single item based on
+ *   viewport settings.
+ *
+ * VARIABLES:
+ * - $scale-settings: A list of maps, each containing a "title", "unit-type",
+ *   and "relative-unit-type" value, defining the settings for different scales.
+ */
+
+// Import design tokens
+@use "../00-settings/spacing" as spacing;
+@use "../00-settings/step-size" as step-size;
+
+// Import modules and helper functions
+@use "sass:math";
+@use "./helpers/handle-number" as help-num;
+
+// Define settings for different scales
+$scale-settings: (
+  (
+    "title": map-get(spacing.$token, "title"),
+    "unit-type": "px",
+    "relative-unit-type": "vi",
+  ),
+  (
+    "title": map-get(step-size.$token, "title"),
+    "unit-type": "rem",
+    "relative-unit-type": "vi",
+  )
+);
+
+/**
+ * Function: processClamp
+ * Processes the token, retrieves items, and generates clamp() values.
+ *
+ * @param {Map} $token - The token to process.
+ * @param {Map} $viewport - The viewport settings.
+ * @return {Map} - The updated token with clamp() values.
+ */
+@function processClamp($token, $viewport) {
+  // Retrieve 'items' and 'title' from the token
+  $items: map-get($token, "items");
+  $title: map-get($token, "title");
+
+  // Generate clamp values for the items
+  $items: generateClamp($items, $title, $viewport);
+
+  // Update the token with the new items
+  $token: map-merge(
+    $token,
+    (
+      "items": $items,
+    )
+  );
+
+  // Return the updated token
+  @return $token;
+}
+
+/**
+ * Function: generateClamp
+ * Generates the clamp() value for a single item based on viewport settings.
+ *
+ * @param {List} $items - The items to process.
+ * @param {String} $title - The title of the token.
+ * @param {Map} $viewport - The viewport settings.
+ * @return {List} - The items with generated clamp() values.
+ */
+@function generateClamp($items, $title, $viewport) {
+  $result: ();
+
+  // Retrieve viewport values
+  $viewport-min: help-num.remToPx(map-get($viewport, "min"));
+  $viewport-max: help-num.remToPx(map-get($viewport, "max"));
+
+  // Retrieve settings based on the title
+  $unit-type: "rem";
+  $relative-unit-type: "vw";
+  @each $setting in $scale-settings {
+    @if map-get($setting, "title") == $title {
+      $unit-type: map-get($setting, "unit-type");
+      $relative-unit-type: map-get($setting, "relative-unit-type");
+    }
+  }
+  $unit: if($unit-type == "px", 1px, 0.0625rem);
+
+  // Set the relative unit based on the $relative-unit-type parameter
+  $relative-unit: 1vw;
+  @if ($relative-unit-type == "cqi") {
+    $relative-unit: 1cqi;
+  } @else if ($relative-unit-type == "vi") {
+    $relative-unit: 1vi;
+  }
+
+  // Loop through each item in the token
+  @each $item in $items {
+    $item-name: map-get($item, "name");
+    $item-min: map-get($item, "min");
+    $item-max: map-get($item, "max");
+
+    // If the minimum size is greater than the maximum size, swap them
+    $should-swap-sizes: $item-min > $item-max;
+    @if ($should-swap-sizes) {
+      $temp: $item-min;
+      $item-min: $item-max;
+      $item-max: $temp;
+    }
+
+    // Calculate the slope and intersection for the item
+    $slope: math.div(($item-max - $item-min), ($viewport-max - $viewport-min));
+    $intersection: (-1 * $viewport-min) * $slope + $item-min;
+
+    // Adjust slope & intersection if min-size originally greater than max-size
+    @if ($should-swap-sizes) {
+      $intersection: math.div((($viewport-max * $slope) + $item-min), 1);
+      $slope: $slope * -1;
+    }
+
+    // Generate the clamp() value for the item
+    $item-value: "clamp(#{help-num.roundValue($item-min * $unit)}, #{help-num.roundValue($intersection * $unit)} + #{help-num.roundValue($slope * 100) * $relative-unit}, #{help-num.roundValue($item-max * $unit)})";
+
+    // Add the item's name and clamp() value to the result
+    $result: append(
+      $result,
+      (
+        $item-name: $item-value,
+      )
+    );
+  }
+
+  // Return the result
+  @return $result;
+}

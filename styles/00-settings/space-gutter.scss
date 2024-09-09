@@ -1,0 +1,48 @@
+/*
+ * FILE: space-gutter.scss
+ *
+ * This file defines the gutter sizes used in the project, including specific 
+ * values for different spacing elements (e.g., "Small", "Base", "Large").
+ *
+ * The `items` map includes:
+ *  - Gutter size name (e.g., "Small", "Base", "Large")
+ *  - Corresponding value retrieved using the `get` function
+ *
+ * Gutter sizes are retrieved from the `spacing` file using the `get` 
+ * function, which utilizes the `retrieveVariables` function to fetch CSS 
+ * variables.
+ */
+
+// Import design tokens
+@use "./spacing.scss" as spacing;
+
+// Import helper functions
+@use "../10-functions/helpers/retrieve-value" as help-rtv;
+
+// Retrieve a CSS variable from the token by key.
+@function get($key: null) {
+  @return help-rtv.tokenCssVariable(
+    $key,
+    spacing.$token,
+    $token-prefix: "space"
+  );
+}
+
+$token: (
+  "title": "Space Gutter",
+  "description": "Defines gutter size values used in the project.",
+  "items": (
+    (
+      "name": "Base",
+      "value": get(m),
+    ),
+    (
+      "name": "S",
+      "value": get(s),
+    ),
+    (
+      "name": "L",
+      "value": get(l),
+    ),
+  ),
+);

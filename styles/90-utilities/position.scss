@@ -1,0 +1,29 @@
+/*
+ * POSITION UTILITY
+ * A utility that sets the position of an element.
+ */
+
+@use "../00-settings/theme-config" as *;
+$prefix: map-get($class-type-prefixes, utilities);
+
+.#{$prefix}position {
+  &--relative {
+    position: relative;
+  }
+
+  &--absolute {
+    position: absolute;
+  }
+
+  &--fixed {
+    position: fixed;
+  }
+
+  &--sticky {
+    position: sticky;
+  }
+
+  &--static {
+    position: static;
+  }
+}

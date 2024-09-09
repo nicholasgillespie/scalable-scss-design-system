@@ -1,0 +1,38 @@
+/*
+ * STACK
+ * A layout that provides a vertical stack of elements with consistent spacing.
+ * Info: https://every-layout.dev/layouts/stack/
+ *
+ * The default stack space of 1.5rem is chosen to align with the standard
+ * line-height. This provides consistent vertical spacing between stacked
+ * elements, based on the body text line-height ratio of 1.5.
+ * 
+ * CUSTOM PROPERTIES AND CONFIGURATION
+ * --stack-space: The space between each item.
+ * --stack-vertical-alignment: How items should justify in the vertical space.
+ * --stack-horizontal-alignment: How items should align horizontally.
+ * 
+ * A data attribute [data-stack="split-after-2"] can be used to distribute items
+ * evenly in the vertical space after the second item.
+ */
+
+@use "../00-settings/theme-config" as *;
+$prefix: map-get($class-type-prefixes, layouts);
+
+.#{$prefix}stack {
+  display: flex;
+  flex-direction: column;
+  justify-content: var(--stack-vertical-alignment, flex-start);
+  align-items: var(--stack-horizontal-alignment, flex-start);
+
+  & > * {
+    margin-block: 0;
+  }
+
+  & > * + * {
+    margin-block-start: var(
+      --space-stack,
+      calc(var(--line-height-base) * 1rem)
+    );
+  }
+}

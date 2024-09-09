@@ -1,0 +1,93 @@
+// Box sizing rules
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+// Set color scheme, scroll behavior and prevent font size inflation
+html {
+  color-scheme: light dark;
+  scroll-behavior: smooth;
+  -moz-text-size-adjust: none;
+  -webkit-text-size-adjust: none;
+  text-size-adjust: none;
+}
+
+// Set core body defaults
+body {
+  min-block-size: min(100dvh, 100vh);
+  text-rendering: optimizeSpeed;
+  writing-mode: horizontal-tb;
+  direction: ltr;
+  overflow-x: hidden;
+  // line-height: 1.5;
+}
+
+// Set shorter line heights on headings and interactive elements
+// h1,
+// h2,
+// h3,
+// h4,
+// button,
+// input,
+// label {
+//   line-height: 1.1;
+// }
+
+// Remove list styles on ul, ol elements with a list role, which suggests default styling will be removed
+ul[role="list"],
+ol[role="list"] {
+  list-style: none;
+}
+
+// Make media easier to work with
+img,
+picture,
+iframe,
+video {
+  max-inline-size: 100%;
+  display: block;
+  block-size: auto;
+}
+
+// Inherit fonts for inputs and buttons
+input,
+button,
+textarea,
+select {
+  font-family: inherit;
+  font-size: inherit;
+}
+
+// Make sure textareas without a rows attribute are not tiny
+textarea:not([rows]) {
+  min-block-size: 10em;
+  resize: none;
+}
+
+// A elements that don't have a class get default styles
+a:not([class]) {
+  text-decoration-skip-ink: auto;
+  color: currentColor;
+}
+
+// Anything that has been anchored to should have extra scroll margin
+// :target {
+//   scroll-margin-block: 5ex;
+// }
+
+// Remove all animations and transitions for people that prefer not to see them
+@media (prefers-reduced-motion: reduce) {
+  html:focus-within {
+    scroll-behavior: auto;
+  }
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+}

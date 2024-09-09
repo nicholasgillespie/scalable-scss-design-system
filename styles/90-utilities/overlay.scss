@@ -1,0 +1,13 @@
+/*
+ * OVERLAY
+ * A utility that applies a visual overlay effect on an element.
+ * Info: https://www.youtube.com/watch?v=NwnZU6mWJkk
+ */
+
+@use "../00-settings/theme-config" as *;
+$prefix: map-get($class-type-prefixes, utilities);
+
+.#{$prefix}overlay {
+  border-image: linear-gradient(hsl(240 100% 20% / 0.6), hsl(0 100% 20% / 0.6))
+    fill 1;
+}

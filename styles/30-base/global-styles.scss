@@ -1,0 +1,257 @@
+@use "../10-functions/theme-accessor" as *;
+@use "../20-mixins/media-query" as *;
+
+*,
+*::before,
+*::after {
+  margin: 0;
+  padding: 0;
+  outline: solid 1px lightpink;
+}
+
+// GLOBAL SETTINGS ////////////////////
+body {
+  accent-color: get(palette, primary);
+  background: get(background, base);
+  color: get(color, base);
+  font-family: get(font-family, base);
+  font-size: get(font-size, base);
+  font-weight: get(font-weight, normal);
+  line-height: get(line-height, base);
+  letter-spacing: get(letter-spacing, base);
+  word-break: break-word;
+  font-size-adjust: from-font;
+}
+
+// DOCUMENT STRUCTURE ////////////////////
+body {
+  display: grid;
+  place-items: center;
+  grid-template-rows: auto 1fr auto;
+}
+
+main {
+  block-size: 100%;
+}
+
+// TYPOGRAPHY ////////////////////
+h1,
+h2,
+h3,
+h4 {
+  // font-family: get(font-family, display);
+  // font-weight: get(font-weight, bold);
+  // line-height: get(line-height, flat);
+  // color: get(color, grayish-dark-blue);
+  // text-transform: capitalize;
+  text-wrap: balance;
+  hyphens: auto;
+}
+
+h1 {
+  // font-size: get(font-size, heading-1);
+  max-inline-size: 20ch;
+}
+
+h2 {
+  // font-size: get(font-size, heading-2);
+  max-inline-size: 35ch;
+}
+
+h3 {
+  // font-size: get(font-size, heading-3);
+  max-inline-size: 35ch;
+}
+
+h4,
+h5,
+h6 {
+  // font-size: get(font-size, 3);
+}
+
+small {
+  // font-size: get(font-size, base);
+}
+
+/* This is quite a new property, so we want code styles to at least, not be huge */
+// @supports not (font-size-adjust: from-font) {
+//   :is(code, kbd, samp) {
+//     font-size: 0.85em;
+//   }
+// }
+
+// CONTENT ELEMENTS ////////////////////
+// TEXT ELEMENTS
+p {
+  max-inline-size: var(--measure, 66ch);
+  text-wrap: pretty;
+}
+
+// .lede {
+// font-size: get(font-size, 3);
+// letter-spacing: get(letter-spacing, extra-loose);
+// text-transform: uppercase;
+// color: get(color, strong-blue);
+// font-weight: get(font-weight, black);
+// }
+
+// b {
+//   color: get-theme("color", "highlight");
+// }
+
+// LIST ELEMENTS
+
+// FORM ELEMENTS
+form {
+  .error {
+    position: absolute;
+    // color: get(color, bright-red);
+    inset-block-end: -1.2lh;
+    // font-size: get(font-size, -2);
+    // font-weight: get(font-weight, bold);
+    font-style: italic;
+  }
+
+  :is(.input-valid, #specBoost) {
+    // border: solid var(--border-width) get(color, slightly-desaturated-cyan);
+  }
+
+  :is(.input-error, #specBoost) {
+    // border: solid var(--border-width) get(color, bright-red);
+  }
+}
+
+// form > * + * {
+//   margin-block-start: var(--flow-space, 1em);
+// }
+
+// :is(input, select, textarea) {
+//   accent-color: var(--color-accent);
+// }
+
+input:not([type="checkbox"], [type="radio"], [type="color"]),
+select,
+textarea {
+  padding: 1em;
+  border: var(--input-border, solid transparent var(--border-width));
+  border-radius: var(--input-radius, var(--radius));
+  background: #e6e6e7;
+  // color: get(color, grayish-dark-blue);
+  inline-size: 100%;
+
+  &::placeholder {
+    color: #9e9ea3;
+  }
+}
+
+input,
+label {
+  // line-height: get(line-height, flat);
+}
+
+label {
+  // font-weight: get(font-weight, bold);
+  // font-size: get(font-size, -1);
+}
+
+// label::after {
+//   content: "\A";
+//   white-space: pre;
+// }
+
+// label:has(input) {
+//   display: flex;
+//   align-items: flex-start;
+//   gap: var(--space-gutter);
+// }
+
+// label:has(input) input {
+//   transform: translateY(0.25ex);
+// }
+
+// label:has(input) + label:has(input) {
+//   --flow-space: var(--space-m);
+//   margin-block-start: var(--space-m);
+// }
+
+// MEDIA ELEMENTS
+video,
+iframe[src*="youtube"],
+iframe[src*="vimeo"] {
+  display: block;
+  inline-size: 100%;
+  block-size: auto;
+  aspect-ratio: 16/9;
+}
+
+// IMAGE & SVG ELEMENTS
+svg:not([class]) {
+  inline-size: auto;
+  block-size: 1lh;
+}
+
+// TABLE ELEMENTS
+table {
+  inline-size: 100%;
+  border-collapse: collapse;
+  border: none;
+}
+
+// INTERACTIVE ELEMENTS ////////////////////
+// A ELEMENT SPECIFICS
+a {
+  display: inline-block;
+
+  &:hover,
+  &:focus-visible {
+    text-decoration: none;
+  }
+
+  &[aria-current="page"] {
+    // color: get(color, slightly-desaturated-cyan);
+    // pointer-events: none;
+
+    &:hover,
+    &:focus-visible {
+      text-decoration: none;
+    }
+  }
+}
+
+// BUTTON STYLES
+
+// INTERACTIVE STATES ////////////////////
+// FOCUS
+// Favour focus-visible over focus so click events don't trigger focus styles
+:focus {
+  outline: none;
+}
+
+:focus-visible {
+  outline: 2px solid var(--focus-color, currentColor);
+  outline-offset: var(--focus-offset, 0.2lh);
+}
+
+// Firefox requires display: inline-block for full element outline.
+// To avoid flow issues, we detect Firefox and reduce focus offset.
+@supports (-moz-appearance: none) {
+  :root {
+    --focus-offset: 0.08em;
+  }
+}
+
+// SELECTION
+::selection {
+  // color: get-theme("color", "bold");
+  // background: get-color("core", "primary");
+}
+
+// TARGET
+:target {
+  // scroll-margin-block: max(2ex, 5lh);
+}
+
+// INTERFACE ELEMENTS ////////////////////
+// SKIP LINK
+
+// SCROLLBAR ////////////////////

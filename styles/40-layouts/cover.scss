@@ -1,0 +1,35 @@
+/*
+ * COVER
+ * A layout that vertically centers content and can accommodate top/header
+ * and bottom/footer elements.
+ * Info: https://every-layout.dev/layouts/cover/
+ * 
+ * CUSTOM PROPERTIES AND CONFIGURATION
+ * --cover-padding: The space around the inside of the Cover container.
+ */
+
+@use "../00-settings/theme-config" as *;
+$prefix: map-get($class-type-prefixes, layouts);
+
+.#{$prefix}cover {
+  display: flex;
+  flex-direction: column;
+  min-block-size: min(100dvh, 100vh);
+  padding: var(--space-cover, var(--space-gutter));
+
+  & > * {
+    margin-block: var(--space-cover, var(--space-gutter));
+  }
+
+  & > :first-child {
+    margin-block-start: 0;
+  }
+
+  & > :last-child {
+    margin-block-end: 0;
+  }
+
+  & > :nth-child(2) {
+    margin-block: auto;
+  }
+}

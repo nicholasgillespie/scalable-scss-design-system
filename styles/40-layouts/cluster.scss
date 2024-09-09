@@ -1,0 +1,24 @@
+/*
+ * CLUSTER
+ * A layout that lets you distribute items with consistent spacing,
+ * regardless of their size.
+ * Info: https://every-layout.dev/layouts/cluster/
+ * 
+ * CUSTOM PROPERTIES AND CONFIGURATION
+ * --cluster-flex-wrap: Whether items should wrap onto the next line.
+ * --cluster-horizontal-alignment: How items should align horizontally.
+ * --cluster-vertical-alignment: How items should align vertically.
+ * --cluster-gap: The space between each item.
+ */
+
+@use "../00-settings/theme-config" as *;
+$prefix: map-get($class-type-prefixes, layouts);
+
+.#{$prefix}cluster {
+  display: flex;
+  flex-direction: var(--cluster-direction, row);
+  flex-wrap: var(--cluster-flex-wrap, wrap);
+  justify-content: var(--cluster-horizontal-alignment, flex-start);
+  align-items: var(--cluster-vertical-alignment, center);
+  gap: var(--space-cluster, var(--space-gutter));
+}

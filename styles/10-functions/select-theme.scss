@@ -1,0 +1,31 @@
+/*
+ * FILE: select-theme.scss
+ *
+ * This file contains functions for selecting and returning theme-specific
+ * items.
+ * 
+ * FUNCTIONS:
+ * - selectTheme: Selects and returns the theme item name and value if it
+ *   starts with the given prefix.
+ *
+ * FUNCTION DETAILS:
+ * - selectTheme:
+ *   @param {String} $item-name - The name of the theme item.
+ *   @param {String} $item-value - The value of the theme item.
+ *   @param {String} $function-arg - The prefix to check against.
+ *   @return {Map|null} - The new item name and value, or null if not matched.
+ */
+
+@function selectTheme($item-name, $item-value, $function-arg) {
+  // Check if the item name starts with the function-arg prefix
+  @if str-index($item-name, $function-arg + "-") == 1 {
+    // Remove the mode prefix and return the new item name and value
+    @return (
+      name: str-slice($item-name, str-length($function-arg) + 2),
+      value: $item-value
+    );
+  }
+
+  // Return null if the item name does not start with the mode prefix
+  @return null;
+}

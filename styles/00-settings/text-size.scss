@@ -1,0 +1,68 @@
+/*
+ * FILE: text-size.scss
+ *
+ * This file defines the text sizes used in the project, including specific 
+ * values for different text elements (e.g., "Base", "Heading 1").
+ *
+ * The `items` map includes:
+ *  - Text size name (e.g., "Base", "Heading 1")
+ *  - Corresponding value retrieved using the `get` function
+ *
+ * Text sizes are retrieved from the `step-size.scss` file using the `get` 
+ * function, which utilizes the `retrieveVariables` function to fetch CSS 
+ * variables.
+ */
+
+// Import design tokens
+@use "./step-size.scss" as step-size;
+
+// Import helper functions
+@use "../10-functions/helpers/retrieve-value" as help-rtv;
+
+// Retrieve a CSS variable from the token by key.
+@function get($key: null) {
+  @return help-rtv.tokenCssVariable(
+    $key,
+    step-size.$token,
+    $token-prefix: "step-size"
+  );
+}
+
+$token: (
+  "title": "text Size",
+  "description": "Defines text size values used in the project.",
+  "items": (
+    (
+      "name": "Base",
+      "value": get(0),
+    ),
+    // (
+    //   "name": "Lede",
+    //   "value": get(1),
+    // ),
+    // (
+    //   "name": "Meta",
+    //   "value": get(-1),
+    // ),
+    (
+        "name": "Heading 1",
+        "value": get(5),
+      ),
+    (
+      "name": "Heading 2",
+      "value": get(4),
+    ),
+    (
+      "name": "Heading 3",
+      "value": get(3),
+    ),
+    (
+      "name": "Heading 4",
+      "value": get(2),
+    ),
+    // (
+    //   "name": "Prose",
+    //   "value": get(0),
+    // ),,,,,,,,
+  ),
+);

@@ -1,0 +1,42 @@
+/*
+ * FILE: letter-spacing.scss
+ *
+ * This file defines the letter-spacing values used in the project.
+ *
+ * The `items` map includes:
+ *  - Letter-spacing name (e.g., "Base", "Extra Loose")
+ *  - Corresponding value for the letter-spacing
+ */
+
+$token: (
+  "title": "Letter-spacing",
+  "description": "Defines the letter-spacing values used in the project.",
+  "items": (
+    (
+      "name": "Base",
+      "value": "normal",
+      // Standard spacing, equivalent to the default spacing of the font
+    ),
+    // (
+    //   "name": "Extra Tight",
+    //   "value": "-0.05ch",
+    //   // Slightly tighter, for dense text or to fit more characters in a line
+    // ),
+    // (
+    //   "name": "Tight",
+    //   "value": "-0.025ch",
+    //   // Tighter than normal but less so than Extra Tight, for subtle adjustments
+    // ),
+    // (
+    //   "name": "Loose",
+    //   "value": "0.025ch",
+    //   // Looser than normal, for improved readability or aesthetic effect
+    // ),
+    (
+        "name": "Extra Loose",
+        "value": "0.05ch",
+        // Much looser, for headings or special text where additional spacing is
+        // beneficial,,
+      ),
+  ),
+);

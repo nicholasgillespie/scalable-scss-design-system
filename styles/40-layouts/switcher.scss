@@ -1,0 +1,38 @@
+/*
+ * SWITCHER
+ * A layout that allows you to switch the layout of items based on available
+ * space.
+ * Info: https://every-layout.dev/layouts/switcher/
+ * 
+ * CUSTOM PROPERTIES AND CONFIGURATION
+ * --space-switcher: The space between each item.
+ * --switcher-content-alignment: How items should distribute in the vertical
+ * space when there is extra space in the cross-axis.
+ * --switcher-vertical-alignment: How items should align horizontally.
+ * --switcher-item-target-width: The target width for each item.
+ * 
+ * A data attribute [data-switcher="full-width-from-third"] can be used to make
+ * items full width after the second item.
+ */
+
+@use "../00-settings/theme-config" as *;
+$prefix: map-get($class-type-prefixes, layouts);
+
+.#{$prefix}switcher {
+  display: flex;
+  flex-wrap: wrap;
+  align-content: var(--switcher-content-alignment, flex-start);
+  align-items: var(--switcher-vertical-alignment, flex-start);
+  gap: var(--space-switcher, var(--space-gutter));
+
+  & > * {
+    flex-grow: 1;
+    flex-basis: calc((var(--switcher-item-target-width, 30rem) - 100%) * 999);
+  }
+
+  &[data-switcher="full-width-from-third"] {
+    & > :nth-child(n + 3) {
+      flex-basis: 100%;
+    }
+  }
+}

@@ -1,0 +1,72 @@
+/*
+ * FILE: color-theme.scss
+ *
+ * This file defines color themes used in the project, including a map of color
+ * properties and values for different themes (e.g., "Light", "Dark").
+ *
+ * The `items` map includes:
+ *  - Theme name (e.g., "Light", "Dark")
+ *  - Value map defining color properties and their values for each theme
+ *  - Keys like `text` and `background` with nested properties for different
+ *    contexts (e.g., `base`, `accent`).
+ *
+ * Ensure both light and dark themes have consistent values to prevent issues
+ * in theme application.
+ *
+ * Ensure value names in the `$token` map (e.g., `background`, `text`, `border`)
+ * match the `alt-name` values in the `$exception-utility-properties` map located
+ * in the `20-mixin/_theme-applier.scss` file to ensure consistent and accurate
+ * generation of CSS utility classes.
+ *
+ * Colors are retrieved from the `color-palette` file using the `get` function,
+ * which utilizes the `tokenCssVariable` function to fetch CSS variables.
+ */
+
+// Import design tokens
+@use "./color-palette" as palette;
+
+// Import helper functions
+@use "../10-functions/helpers/retrieve-value" as help-rtv;
+
+// Retrieve a CSS variable from the token by key.
+@function get($key: null) {
+  @return help-rtv.tokenCssVariable(
+    $key,
+    palette.$token,
+    $token-prefix: "color"
+  );
+}
+
+$token: (
+  "title": "Theme Color",
+  "description": "Themes with colors sourced from the color-palette token.",
+  "css-variable-prefix": "color",
+  "items": (
+    (
+      "name": "Dark",
+      "value": (
+        "text": (
+          "base": get("light bright"),
+          "accent": get("light"),
+        ),
+        "background": (
+          "base": get("dark"),
+          "accent": get("dim"),
+        ),
+      ),
+    ),
+    (
+      "name": "Light",
+      "value": (
+        "text": (
+          "base": get("dark"),
+          "accent": get("dim"),
+        ),
+        "background": (
+          "base": get("light bright"),
+          "accent": get("light"),
+        ),
+      ),
+    ),
+  ),
+);

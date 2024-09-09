@@ -1,0 +1,37 @@
+/*
+ * BOX
+ * A layout that can be applied to a block-level element to provide padding,
+ * border, color, and background color.
+ * Info: https://every-layout.dev/layouts/box/
+ * 
+ * CUSTOM PROPERTIES AND CONFIGURATION
+ * --space-box: The padding of the box.
+ * --box-border-style: The border style of the box.
+ * --box-color: The color of the box.
+ * --box-bg: The background color of the box.
+ * --box-border: The border of the box.
+ * --box-radius: The border radius of the box.
+ * --space-gutter: The gutter space of the box.
+ */
+
+@use "../00-settings/theme-config" as *;
+$prefix: map-get($class-type-prefixes, layouts);
+
+.#{$prefix}box {
+  // color: var(--box-color, currentColor);
+  background-color: var(--box-bg, transparent);
+  border: var(--box-border, solid transparent 2px);
+  border-radius: var(--box-radius, var(--radius));
+  max-inline-size: unset;
+  padding: var(--space-box, var(--space-gutter));
+  position: relative;
+
+  // & * {
+  // color: inherit;
+  // }
+
+  // &[data-box="invert"] {
+  //   --box-color: var(--color-global-bg);
+  //   --box-bg: var(--color-global-text);
+  // }
+}

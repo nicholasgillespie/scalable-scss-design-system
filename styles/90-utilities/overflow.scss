@@ -1,0 +1,15 @@
+/*
+ * OVERFLOW
+ * A utility that clips any content extending beyond an element's horizontal
+ * boundaries, while allowing content to visibly extend beyond its vertical
+ * boundaries.
+ * Info: https://www.youtube.com/watch?v=72pUm4tQesw
+ */
+
+@use "../00-settings/theme-config" as *;
+$prefix: map-get($class-type-prefixes, utilities);
+
+.#{$prefix}overflow {
+  overflow-x: clip;
+  overflow-y: visible;
+}

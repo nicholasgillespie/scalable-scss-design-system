@@ -1,0 +1,36 @@
+/*
+ * FILE: font-family.scss
+ *
+ * This file defines the font families used in the project.
+ *
+ * Each array of fonts creates a priority-based order. The first font in the 
+ * array should be the ideal font, followed by sensible, web-safe fallbacks.
+ */
+
+$token: (
+  "title": "Font Family",
+  "description": "Defines font families with priority-based fallbacks.",
+  "items": (
+    (
+      "name": "Base",
+      "value": (
+        "Space Mono",
+        "monospace",
+      ),
+    ),
+    (
+      "name": "Display",
+      "value": (
+        "Space Mono",
+        "monospace",
+      ),
+    ),
+    // (
+    //   "name": "Mono",
+    //   "value": (
+    //     "Space Mono",
+    //     "monospace",
+    //   ),
+    // ),,
+  ),
+);

@@ -1,0 +1,195 @@
+/*
+ * FILE: process-token.scss
+ *
+ * This file contains functions for processing and formatting design tokens.
+ * 
+ * FUNCTIONS:
+ * - processToken: Validates the token format, retrieves and processes items,
+ *   and formats them into key/value pairs.
+ * - formatItems: Iterates over items, handles nested structures, and formats
+ *   them into key/value pairs.
+ * - processSimpleKeyValue: Processes simple key-value pairs.
+ * - processNestedKeyValue: Processes nested key-value pairs.
+ * - processMultiLevelNestedKeyValue: Processes multi-level nested key-value
+ *   pairs.
+ *
+ * VARIABLES:
+ * - $exception-skip-keys: A list of maps, each containing a "title" and a
+ *   "skip" value, indicating the number of key segments to skip when
+ *   generating the final key names.
+ */
+
+// Import design tokens
+@use "../00-settings/color-palette" as color-palette;
+
+// Import helper functions
+@use "./helpers/handle-string" as help-str;
+
+// Define exceptions for skipping key segments
+$exception-skip-keys: (
+  (
+    "title": map-get(color-palette.$token, "title"),
+    "skip": 1,
+  )
+);
+
+/**
+ * Function: processToken
+ * Validates the token format, retrieves and processes items, and formats them
+ * into key/value pairs.
+ *
+ * @param {Map} $token - The token to process.
+ * @return {Map} - The processed token with formatted items.
+ */
+@function processToken($token: null) {
+  // Retrieve 'items' and 'title' from the token
+  $items: map-get($token, "items");
+  $title: map-get($token, "title");
+
+  // Format items into key/value pairs
+  $items: formatItems($items, $title);
+
+  // Return the updated items
+  @return $items;
+}
+
+/**
+ * Function: formatItems
+ * Iterates over items, handles nested structures, and formats them into
+ * key/value pairs.
+ *
+ * @param {List|Map} $items - The items to format.
+ * @param {String} $title - The title of the token.
+ * @param {List} $parent-keys - The parent keys for nested structures.
+ * @return {Map} - The formatted items.
+ */
+@function formatItems($items, $title, $parent-keys: ()) {
+  $result: ();
+  $skip: 0;
+
+  // Retrieve the number of key segments to skip
+  @if type-of($exception-skip-keys) == "map" {
+    @if map-get($exception-skip-keys, "title") == $title {
+      $skip: map-get($exception-skip-keys, "skip");
+    }
+  } @else if type-of($exception-skip-keys) == "list" {
+    @each $exception in $exception-skip-keys {
+      @if map-get($exception, "title") == $title {
+        $skip: map-get($exception, "skip");
+      }
+    }
+  }
+
+  @if type-of($items) == "list" {
+    // Lists: Use for multiple values that are not key-value pairs.
+    @each $item in $items {
+      $keys: map-keys($item);
+
+      @if length($keys) == 1 {
+        // Simple Key-Value Pairs: Use for single values.
+        $key: nth($keys, 1);
+        $value: map-get($item, $key);
+        $result: map-merge($result, processSimpleKeyValue($key, $value));
+      } @else if length($keys) == 2 {
+        $name-key: nth($keys, 1);
+        $value-key: nth($keys, 2);
+        $name-key-value: map-get($item, $name-key);
+
+        @if type-of(map-get($item, $value-key)) == "map" {
+          // Multi-Level Nested Key-Value Pairs: Use for deeply nested structures.
+          $sub-result: processMultiLevelNestedKeyValue(
+            map-get($item, $value-key),
+            $title,
+            append($parent-keys, $name-key-value)
+          );
+          $result: map-merge($result, $sub-result);
+        } @else {
+          // Nested Key-Value Pairs: Use for complex structures.
+          $result: map-merge(
+            $result,
+            processNestedKeyValue($name-key-value, map-get($item, $value-key))
+          );
+        }
+      }
+    }
+  } @else if type-of($items) == "map" {
+    $keys: map-keys($items);
+
+    @each $key in $keys {
+      $value: map-get($items, $key);
+
+      @if type-of($value) == "map" {
+        // Multi-Level Nested Key-Value Pairs: Use for deeply nested structures.
+        $sub-result: processMultiLevelNestedKeyValue(
+          $value,
+          $title,
+          append($parent-keys, $key)
+        );
+        $result: map-merge($result, $sub-result);
+      } @else {
+        $nested-key: join($parent-keys, $key, comma);
+        $delimiter: ", ";
+        $nested-key: help-str.listToString($nested-key, $delimiter);
+        $nested-key: help-str.stringTrimAfter($nested-key, $delimiter, $skip);
+        $nested-key: help-str.stringReplace($nested-key, $delimiter, " ");
+
+        // Simple Key-Value Pairs: Use for single values.
+        $result: map-merge($result, processSimpleKeyValue($nested-key, $value));
+      }
+    }
+  }
+
+  @return $result;
+}
+
+/**
+ * Function: processSimpleKeyValue
+ * Processes simple key-value pairs.
+ *
+ * @param {String} $key - The key to process.
+ * @param {String} $value - The value to process.
+ * @return {Map} - The processed key-value pair.
+ */
+@function processSimpleKeyValue($key, $value) {
+  $key: help-str.slugify($key);
+  @return ($key: $value);
+}
+
+/**
+ * Function: processNestedKeyValue
+ * Processes nested key-value pairs.
+ *
+ * @param {String} $name-key-value - The nested key to process.
+ * @param {String} $value - The value to process.
+ * @return {Map} - The processed nested key-value pair.
+ */
+@function processNestedKeyValue($name-key-value, $value) {
+  $name-key-value: help-str.slugify($name-key-value);
+  @return ($name-key-value: $value);
+}
+
+/**
+ * Function: processMultiLevelNestedKeyValue
+ * Processes multi-level nested key-value pairs.
+ *
+ * @param {Map} $item - The item to process.
+ * @param {String} $title - The title of the token.
+ * @param {List} $parent-keys - The parent keys for nested structures.
+ * @return {Map} - The processed multi-level nested key-value pairs.
+ */
+@function processMultiLevelNestedKeyValue($item, $title, $parent-keys) {
+  $sub-result: formatItems($item, $title, $parent-keys);
+  $result: ();
+
+  @each $sub-key, $sub-value in $sub-result {
+    $sub-key: help-str.slugify($sub-key);
+    $result: map-merge(
+      $result,
+      (
+        $sub-key: $sub-value,
+      )
+    );
+  }
+
+  @return $result;
+}

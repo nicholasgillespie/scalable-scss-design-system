@@ -1,0 +1,121 @@
+/*
+ * FILE: media-query.scss
+ *
+ * This file contains a mixin for handling media queries based on theme 
+ * breakpoints. It includes logic for converting breakpoint values, setting 
+ * units, and validating conditions.
+ * 
+ * MIXIN:
+ * - mediaQuery: Handles media queries for different conditions and 
+ *   breakpoints.
+ *
+ * MIXIN DETAILS:
+ * - mediaQuery:
+ *   @param {String|null} $condition - The condition for the media query 
+ *     (e.g., "up-to", "from", "from-to").
+ *   @param {String|null} $breakpoint1 - The first breakpoint value.
+ *   @param {String|null} $breakpoint2 - The second breakpoint value 
+ *     (optional).
+ *   @param {List} $extra-args - Additional arguments (optional).
+ *
+ * NOTE:
+ * For media queries, it's generally a good idea to use rems instead of pixels.
+ *
+ * REASONS:
+ * - User Accessibility: Using rems in media queries ensures that the 
+ *   breakpoints adapt based on the user’s default font size. This way, if a 
+ *   user increases their base font size (for accessibility reasons), the media 
+ *   query will respect that and adjust the layout accordingly.
+ * - Consistent Layout: Rem-based media queries allow the design to shift based 
+ *   on available space rather than strict device dimensions, making the layout 
+ *   more flexible and responsive, especially for users with larger font 
+ *   settings.
+ */
+
+@use "../00-settings/theme-config" as config;
+@use "../10-functions/helpers/handle-number.scss" as help-num;
+
+@mixin mediaQuery(
+  $condition: null,
+  $breakpoint1: null,
+  $breakpoint2: null,
+  $extra-args...
+) {
+  // Retrieving the breakpoints from the theme
+  $breakpoints: map-get(config.$theme, "breakpoints");
+
+  // Converting the breakpoint values to numbers if they exist and are valid
+  $breakpoint1-value: if(
+    $breakpoint1 and map-has-key($breakpoints, $breakpoint1),
+    help-num.stripUnit(
+      help-num.stringToNumber(map-get($breakpoints, $breakpoint1))
+    ),
+    null
+  );
+  $breakpoint2-value: if(
+    $breakpoint2 and map-has-key($breakpoints, $breakpoint2),
+    help-num.stripUnit(
+      help-num.stringToNumber(map-get($breakpoints, $breakpoint2))
+    ),
+    null
+  );
+
+  // Setting the unit of measurement
+  $unit: "rem";
+
+  // Creating a list of available breakpoints
+  $available-breakpoints: ();
+  @each $key, $value in $breakpoints {
+    $value: help-num.stripUnit(help-num.stringToNumber($value));
+    $available-breakpoints: append(
+      $available-breakpoints,
+      "#{$key} (#{$value}#{$unit})",
+      "comma"
+    );
+  }
+
+  // Checking the validity of the condition
+  @if not $condition or not index(("up-to", "from", "from-to"), $condition) {
+    @warn "Invalid or missing condition. Available conditions are: 'up-to', 'from', 'from-to'.";
+  } @else {
+    // Handling different conditions
+    // 'up-to' condition
+    @if $condition == "up-to" {
+      @if not $breakpoint1-value {
+        @warn "Invalid or missing breakpoint for the 'up-to' condition. Available breakpoints are: #{$available-breakpoints}.";
+      } @else {
+        @media (max-width: #{$breakpoint1-value}#{$unit}) {
+          @content;
+        }
+      }
+    }
+    // 'from' condition
+    @else if $condition == "from" {
+      @if not $breakpoint1-value {
+        @warn "Invalid or missing breakpoint for the 'from' condition. Available breakpoints are: #{$available-breakpoints}.";
+      } @else {
+        @media (min-width: #{($breakpoint1-value + 0.001)}#{$unit}) {
+          @content;
+        }
+      }
+    }
+    // 'from-to' condition
+    @else if $condition == "from-to" {
+      @if not $breakpoint1-value or not $breakpoint2-value {
+        @warn "Invalid or missing breakpoints for the 'from-to' condition. Available breakpoints are: #{$available-breakpoints}.";
+      } @else if $breakpoint1-value == $breakpoint2-value {
+        @warn "The breakpoints for the 'from-to' condition cannot be the same. Available breakpoints are: #{$available-breakpoints}.";
+      } @else {
+        // Swapping the values if the first breakpoint is larger than the second
+        @if $breakpoint1-value > $breakpoint2-value {
+          $temp: $breakpoint1-value;
+          $breakpoint1-value: $breakpoint2-value;
+          $breakpoint2-value: $temp;
+        }
+        @media (min-width: #{($breakpoint1-value + 0.001)}#{$unit}) and (max-width: #{$breakpoint2-value}#{$unit}) {
+          @content;
+        }
+      }
+    }
+  }
+}

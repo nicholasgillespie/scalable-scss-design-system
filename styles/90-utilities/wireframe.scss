@@ -1,0 +1,36 @@
+:root {
+  --wireframe-color: rgba(130, 50, 210, 0.5);
+  --wireframe-border: 1px dashed var(--wireframe-color);
+}
+
+html {
+  &::before {
+    content: "";
+    position: fixed;
+    inset-block-start: 0;
+    inset-block-end: 0;
+    inset-inline-start: 50%;
+    border-inline-start: var(--wireframe-border);
+    z-index: 9999;
+  }
+}
+
+body {
+  &::before,
+  &::after {
+    content: "";
+    position: fixed;
+    inset-block-start: 0;
+    inset-block-end: 0;
+    border-inline-start: var(--wireframe-border);
+    z-index: 9999;
+  }
+
+  &::before {
+    inset-inline-start: var(--space-gutter);
+  }
+
+  &::after {
+    inset-inline-end: var(--space-gutter);
+  }
+}
