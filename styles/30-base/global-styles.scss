@@ -26,7 +26,6 @@ body {
 // DOCUMENT STRUCTURE ////////////////////
 body {
   display: grid;
-  place-items: center;
   grid-template-rows: auto 1fr auto;
 }
 

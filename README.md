@@ -120,7 +120,7 @@ To include the styles in your HTML, use the following links:
 
 To apply the theme to your project, you can generate CSS custom properties in one of two ways:
 
-1. **Generate All Theme Variables:**
+1. **Generate Theme Variables:**
 
    To apply the full theme, include the `generateThemeVariables` mixin in your root element. This will generate global CSS custom properties for all design tokens defined in `_theme-config.scss`. Typically, this is added to the `:root` selector in your main SCSS file:
 
@@ -130,9 +130,17 @@ To apply the theme to your project, you can generate CSS custom properties in on
    }
    ```
 
+   Alternatively, you can generate CSS custom properties based on specific token types. For example, to generate variables for "global" or "contextual-generic" tokens:
+
+   ```scss
+   :root {
+     @include generateThemeVariables("contextual-generic");
+   }
+   ```
+
 2. **Generate Specific Token Variables with Optional Transformation:**
 
-   If you need to generate CSS custom properties for specific token groups, you can use the `generateTokenVariables` mixin. This method allows you to focus on particular tokens and apply an optional transformation function. For example, to generate variables for the "colors" token group and apply the `toP3` transformation function:
+   If you need to generate CSS custom properties for specific token groups, you can use the `generateTokenVariables` mixin. This method allows you to focus on particular tokens and apply an optional transformation function. For example, to generate variables for the "colors" token group and apply the `transformColorP3` transformation function:
 
    ```scss
    :root {
@@ -140,7 +148,7 @@ To apply the theme to your project, you can generate CSS custom properties in on
    }
    ```
 
-### Applying Theme Values with the `get` Function
+### Accessing Theme Values with the `get` Function
 
 The Scalable SCSS Design System provides a `get` function within the `_theme-accessor.scss` file, enabling the dynamic application of theme values based on design tokens. This function allows you to consistently apply CSS variables across your styles with ease:
 
