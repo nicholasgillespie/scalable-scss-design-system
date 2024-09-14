@@ -21,9 +21,15 @@ $exception-clamp-tokens: (
  * @param {String|null} $key - The key to retrieve the CSS variable for.
  * @param {Map|null} $token - The token map to search within.
  * @param {String|null} $token-prefix - The prefix for the CSS variable.
+ * @param {Boolean} $exclude-base-suffix - Whether to exclude the base suffix.
  * @return {String|null} - The CSS variable or null if not found.
  */
-@function tokenCssVariable($key: null, $token: null, $token-prefix: null) {
+@function tokenCssVariable(
+  $key: null,
+  $token: null,
+  $token-prefix: null,
+  $exclude-base-suffix: false
+) {
   // Check if the token is null, warn and return null if true.
   @if $token == null {
     @warn "No token provided.";
@@ -59,7 +65,11 @@ $exception-clamp-tokens: (
 
   // Validate key, return CSS variable or warn if invalid.
   @if index($keys, $key) {
-    @return "var(--#{$token-prefix}-#{$key})";
+    @if $key == "base" and $exclude-base-suffix {
+      @return "var(--#{$token-prefix})";
+    } @else {
+      @return "var(--#{$token-prefix}-#{$key})";
+    }
   } @else {
     @warn "Invalid value `#{$key}`. Available options: #{$keys}.";
     @return null;

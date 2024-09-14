@@ -5,9 +5,9 @@
 :root {
   @include generateThemeVariables("global");
 
-  @supports (color: color(display-p3 1 1 1)) {
-    @include generateTokenVariables("palette", "transformColorP3");
-  }
+  // @supports (color: color(display-p3 1 1 1)) {
+  //   @include generateTokenVariables("palette", "transformColorP3");
+  // }
 }
 
 // Contextual-generic tokens
@@ -23,18 +23,18 @@
 }
 
 :root {
-  @media (prefers-color-scheme: light) {
-    @include generateTokenVariables("theme", "selectTheme", "light");
+  @media (prefers-color-scheme: dark) {
+    @include generateTokenVariables("theme", "selectTheme", "dark");
   }
 }
 
-body[data-theme="dark"] {
-  @include generateTokenVariables("theme", "selectTheme", "dark");
-}
+// body[data-theme="dark"] {
+//   @include generateTokenVariables("theme", "selectTheme", "dark");
+// }
 
-body[data-theme="light"] {
-  @include generateTokenVariables("theme", "selectTheme", "light");
-}
+// body[data-theme="light"] {
+//   @include generateTokenVariables("theme", "selectTheme", "light");
+// }
 
 // Component-specific tokens
 // Contextual-content tokens

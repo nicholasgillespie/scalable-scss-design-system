@@ -37,6 +37,7 @@
 $token-type: (
   "global": (
     "palette",
+    "shadow",
     "spacing",
     "step-size",
     "font-family",
@@ -59,6 +60,7 @@ $token-type: (
 
 // List of tokens excluding the base suffix from CSS custom property names
 $exception-exclude-base-suffix: (
+  "shadow",
   "line-height",
   "letter-spacing",
   "radius",
@@ -77,6 +79,10 @@ $exception-utility-properties: (
     "alt-name": "background",
     "alt-property": "background-color",
   ),
+  "box-shadow": (
+    "alt-name": "shadow",
+    "alt-property": "box-shadow",
+  ),
   "border-color": (
     "alt-name": "border",
     "alt-property": "border-color",
@@ -93,18 +99,18 @@ $exception-utility-properties: (
 
 // List of custom utility class prefixes
 $custom-utility-prefixes: (
-  // "space-box",
+  "space-box",
   "space-cluster",
-  // "space-columns",
-  // "space-cover",
-  // "space-flow",
-  // "space-grid",
-  // "space-gutter",
-  // "space-region",
-  // "space-repel",
-  // "space-sidebar",
-  // "space-stack",
-  // "space-switcher"
+  "space-columns",
+  "space-cover",
+  "space-flow",
+  "space-grid",
+  "space-gutter",
+  "space-region",
+  "space-repel",
+  "space-sidebar",
+  "space-stack",
+  "space-switcher"
 );
 
 // Retrieve the class type prefix for utilities
@@ -309,41 +315,42 @@ $class-type-prefix: map-get(config.$class-type-prefixes, utilities);
           $items: $processed-items;
         }
 
-        // Loop through each item in the token
-        @each $item-name in map-keys($items) {
-          // Handle theme group items
-          @if $group-key == "theme" {
-            $item-name-prop: nth(help-str.stringToList($item-name, "-"), 1);
-            $item-name: help-str.stringReplace(
-              $item-name,
-              "#{$item-name-prop}-",
-              ""
-            );
+        @if $items != null {
+          // Loop through each item in the token
+          @each $item-name in map-keys($items) {
+            // Handle theme group items
+            @if $group-key == "theme" {
+              $category: nth(help-str.stringToList($item-name, "-"), 1);
+              $item-name: help-str.stringTrimAfter($item-name, "-", 1);
+              $item-name-prop: nth(help-str.stringToList($item-name, "-"), 1);
 
-            // Generate utility class for theme items
-            @if $property-or-alt-name == $item-name-prop {
-              .#{$class-type-prefix}#{$property-or-alt-name}-#{$item-name} {
-                #{$css-property}: var(
-                  --#{$group-prefix}-#{$property-or-alt-name}-#{$item-name}
-                );
-              }
-            }
-          } @else {
-            // Handle base property exceptions
-            @if $item-name ==
-              "base" and
-              index($exception-exclude-base-suffix, $group-key)
-            {
-              .#{$class-type-prefix}#{$property-or-alt-name}-base {
-                #{$css-property}: var(--#{$group-prefix});
+              // Generate utility class for theme items
+              @if $property-or-alt-name == $item-name-prop {
+                .#{$class-type-prefix}#{$category}-#{$item-name} {
+                  #{$css-property}: var(
+                    --#{$group-prefix}-#{$category}-#{$item-name}
+                  );
+                }
               }
             } @else {
-              // Generate utility class for non-theme items
-              .#{$class-type-prefix}#{$property-or-alt-name}-#{$item-name} {
-                #{$css-property}: var(--#{$group-prefix}-#{$item-name});
+              // Handle base property exceptions
+              @if $item-name ==
+                "base" and
+                index($exception-exclude-base-suffix, $group-key)
+              {
+                .#{$class-type-prefix}#{$property-or-alt-name}-base {
+                  #{$css-property}: var(--#{$group-prefix});
+                }
+              } @else {
+                // Generate utility class for non-theme items
+                .#{$class-type-prefix}#{$property-or-alt-name}-#{$item-name} {
+                  #{$css-property}: var(--#{$group-prefix}-#{$item-name});
+                }
               }
             }
           }
+        } @else {
+          @warn "No items found for `#{$group-key}`.";
         }
       }
     }

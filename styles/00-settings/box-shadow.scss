@@ -1,0 +1,36 @@
+/*
+ * FILE: box-shadow.scss
+ *
+ * This file defines the shadow values used in the project.
+ *
+ * The `items` map includes:
+ *  - Shadow name (e.g., "Small", "Medium", "Large")
+ *  - Corresponding shadow value
+ */
+
+$token: (
+  "title": "Box Shadow",
+  "description": "Defines the shadow values used in the project.",
+  "items": (
+    (
+      "name": "Base",
+      "value": "0 1px 2px rgba(0, 0, 0, 0.1)",
+    ),
+    (
+      "name": "S",
+      "value": "0 1px 2px rgba(0, 0, 0, 0.1)",
+    ),
+    (
+      "name": "M",
+      "value": "0 2px 4px rgba(0, 0, 0, 0.1)",
+    ),
+    (
+      "name": "L",
+      "value": "0 4px 8px rgba(0, 0, 0, 0.1)",
+    ),
+    // (
+    //   "name": "XL",
+    //   "value": "0 8px 16px rgba(0, 0, 0, 0.1)",
+    // ),,,
+  ),
+);

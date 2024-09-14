@@ -6,19 +6,19 @@
 *::after {
   margin: 0;
   padding: 0;
-  outline: solid 1px lightpink;
+  // outline: solid 1px lightpink;
 }
 
 // GLOBAL SETTINGS ////////////////////
 body {
-  accent-color: get(palette, primary);
-  background: get(background, base);
-  color: get(color, base);
-  font-family: get(font-family, base);
-  font-size: get(font-size, base);
-  font-weight: get(font-weight, normal);
-  line-height: get(line-height, base);
-  letter-spacing: get(letter-spacing, base);
+  // accent-color: get(palette, primary);
+  background: get(background, global);
+  color: get(color, global);
+  // font-family: get(font-family, base);
+  // font-size: get(font-size, base);
+  // font-weight: get(font-weight, normal);
+  // line-height: get(line-height, base);
+  // letter-spacing: get(letter-spacing, base);
   word-break: break-word;
   font-size-adjust: from-font;
 }

@@ -13,10 +13,14 @@
  * Ensure both light and dark themes have consistent values to prevent issues
  * in theme application.
  *
- * Ensure value names in the `$token` map (e.g., `background`, `text`, `border`)
- * match the `alt-name` values in the `$exception-utility-properties` map located
- * in the `20-mixin/_theme-applier.scss` file to ensure consistent and accurate
- * generation of CSS utility classes.
+ * Ensure value names in the `$token` map (e.g., `background`, `text`, `shadow`)
+ * match the `alt-name` values in the `$exception-utility-properties` map
+ * located in the `20-mixin/_theme-applier.scss` file to ensure consistent and
+ * accurate generation of CSS utility classes.
+ *
+ * Ensure that category names, such as "global" and "surface," are single words
+ * without hyphens (`-`) to enable the `generateThemeUtilities` mixin to
+ * accurately select the item names.
  *
  * Colors are retrieved from the `color-palette` file using the `get` function,
  * which utilizes the `tokenCssVariable` function to fetch CSS variables.
@@ -24,17 +28,28 @@
 
 // Import design tokens
 @use "./color-palette" as palette;
+@use "./box-shadow" as shadow;
 
 // Import helper functions
 @use "../10-functions/helpers/retrieve-value" as help-rtv;
 
-// Retrieve a CSS variable from the token by key.
-@function get($key: null) {
-  @return help-rtv.tokenCssVariable(
-    $key,
-    palette.$token,
-    $token-prefix: "color"
-  );
+// Retrieve a CSS variable from the token by key
+@function get($arg1: null, $arg2: null) {
+  // Handle shadow tokens separately with an additional condition
+  @if to-lower-case($arg1) == "shadow" {
+    @return help-rtv.tokenCssVariable(
+      $arg2,
+      shadow.$token,
+      $token-prefix: "shade",
+      $exclude-base-suffix: true
+    );
+  } @else {
+    @return help-rtv.tokenCssVariable(
+      $arg1,
+      palette.$token,
+      $token-prefix: "color"
+    );
+  }
 }
 
 $token: (
@@ -43,28 +58,34 @@ $token: (
   "css-variable-prefix": "color",
   "items": (
     (
-      "name": "Dark",
+      "name": "Light",
       "value": (
-        "text": (
-          "base": get("light bright"),
-          "accent": get("light"),
+        "global": (
+          "text": get("Dark"),
+          "background": get("Light Bright"),
         ),
-        "background": (
-          "base": get("dark"),
-          "accent": get("dim"),
+        "surface": (
+          "text": get("Charcoal"),
+          "text-interact": get("Gray"),
+          "background": get("Gray Glare"),
+          "background-interact": get("Charcoal"),
+          "shadow": get("Shadow", "l"),
         ),
       ),
     ),
     (
-      "name": "Light",
+      "name": "Dark",
       "value": (
-        "text": (
-          "base": get("dark"),
-          "accent": get("dim"),
+        "global": (
+          "text": get("Light Bright"),
+          "background": get("Dark"),
         ),
-        "background": (
-          "base": get("light bright"),
-          "accent": get("light"),
+        "surface": (
+          "text": get("Gray Glare"),
+          "text-interact": get("Gray Bright"),
+          "background": get("Charcoal"),
+          "background-interact": get("Charcoal"),
+          "shadow": "none",
         ),
       ),
     ),

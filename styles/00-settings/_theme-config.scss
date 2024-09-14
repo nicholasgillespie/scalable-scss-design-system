@@ -22,11 +22,12 @@
 
 // Import design tokens
 @use "./viewport" as viewport;
+@use "./box-shadow" as shadow;
 @use "./color-palette" as palette;
 @use "./color-theme" as color;
 @use "./spacing" as spacing;
 @use "./step-size" as step-size;
-@use "./text-size" as text-size;
+@use "./font-size" as font-size;
 @use "./font-family.scss" as font-family;
 @use "./font-weight.scss" as font-weight;
 @use "./line-height" as line-height;
@@ -49,10 +50,11 @@
 // Format token items
 $viewport: processToken(viewport.$token);
 $palette: processToken(palette.$token);
+$shadow: processToken(shadow.$token);
 $color: processToken(color.$token);
 $spacing: processToken(processClamp(spacing.$token, $viewport));
 $step-size: processToken(processClamp(step-size.$token, $viewport));
-$text-size: processToken(text-size.$token);
+$font-size: processToken(font-size.$token);
 $font-family: processToken(font-family.$token);
 $font-weight: processToken(font-weight.$token);
 $line-height: processToken(line-height.$token);
@@ -77,10 +79,11 @@ $theme: (
     "widescreen": #{map-get($viewport, "max")}#{$unit},
   ),
   "palette": $palette,
+  "shadow": $shadow,
   "theme": $color,
   "spacing": $spacing,
   "step-size": $step-size,
-  "text-size": $text-size,
+  "text-size": $font-size,
   "font-family": $font-family,
   "font-weight": $font-weight,
   "line-height": $line-height,
@@ -102,11 +105,19 @@ $groups: (
     ),
   ),
   (
+    key: "shadow",
+    prefix: "shade",
+    properties: (
+      "box-shadow",
+    ),
+  ),
+  (
     key: "theme",
     prefix: "color",
     properties: (
       "color",
       "background-color",
+      "box-shadow",
     ),
   ),
   (
