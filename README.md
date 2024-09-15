@@ -12,7 +12,7 @@ The design system makes extensive use of layout classes derived from [Every Layo
 - **Theme Application**: Generates CSS variables from design tokens for consistent theming.
 - **Theme Access**: Provides a function for retrieving CSS variables corresponding to design tokens based on specified properties and values.
 - **Theme Utilities**: Includes utility classes derived from the theme configuration for efficient styling.
-- **Layout Classes**: Versatile, composable classes for responsive designs inspired by [Every Layout](https://every-layout.dev/).
+- **Layout Classes**: Versatile, composable classes for responsive designs from [Every Layout](https://every-layout.dev/).
 
 ## Overview
 
