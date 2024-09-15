@@ -1,18 +1,22 @@
 # Scalable SCSS Design System
 
-Welcome to the **Scalable SCSS Design System**! This repository provides a modular and scalable design system built with [**SCSS**](https://sass-lang.com/), designed for easy integration into any project.
+Welcome to the **Scalable SCSS Design System**! This repository offers a modular and scalable design system built with [SCSS](https://sass-lang.com/), designed for easy integration into any project.
+
+Inspired by [Andy Bell's](https://set.studio/) [CUBE CSS Boilerplate](https://github.com/Set-Creative-Studio/cube-boilerplate/blob/main/README.md) and incorporating the [CUBE CSS methodology](https://cube.fyi/), the system provides consistent design application and maintainability. It also leverages the file architecture and class naming conventions from the in-development [W3C design system](https://design-system.w3.org/) for an organized and efficient structure.
+
+The design system makes extensive use of layout classes derived from Every Layout, which provides robust, context-independent CSS layout solutions. This ensures that your layouts are both resilient and adaptable, leveraging the power of native CSS layout algorithms.
 
 ### Key Features:
 
 - **Design Tokens**: Centralized theme configuration for easy management of design tokens.
-- **Token Application**: Generation of CSS custom properties from design tokens.
-- **Dynamic Token Access**: Function for retrieving the CSS variable corresponding to a design token based on the specified property and value.
-- **Custom Utilities**: Custom utility classes derived from design tokens.
-- **Modular Structure**: Organized SCSS files for easy maintenance and scalability.
+- **Theme Application**: Generates CSS variables from design tokens.
+- **Theme Access**: Retrieves the CSS variable corresponding to a design token based on the specified property and value.
+- **Theme Utilities**: Provides utility classes derived from the theme configuration.
+- **Layout Classes**: Versatile, composable classes for responsive designs inspired by [Every Layout](https://every-layout.dev/).
 
 ## Overview
 
-The Scalable SCSS Design System is built with flexibility and scalability in mind. It centralizes your design tokens (such as colors, spacing, typography) into a theme configuration, which is applied consistently across your project.
+The **Scalable SCSS Design System** is built with flexibility and scalability in mind. It centralizes your design tokens (such as colors, spacing, typography) into a theme configuration, which is applied consistently across your project.
 
 ## Table of Contents
 
@@ -86,7 +90,7 @@ To use this design system in your project:
 
 3. **Include in SCSS Build**:
 
-   Ensure that your build process includes the design system's SCSS files. This is generally handled automatically if you are using modern build tools like Vite or Astro.
+   Ensure that your build process includes the design system's SCSS files. This is generally handled automatically if you are using modern build tools like [Vite](https://vitejs.dev/) or [Astro](https://astro.build/).
 
 ## Usage
 
@@ -94,17 +98,19 @@ Once you have added the design system to your project, you can start using the d
 
 ### Importing the Styles
 
+To ensure compatibility and a progressive enhancement approach, this setup uses the [CSS Only Mustard Cut](https://github.com/Fall-Back/CSS-Mustard-Cut?tab=readme-ov-file#css-only-mustard-cut) technique. This method serves advanced styles conditionally based on feature support while providing a basic, functional experience across all browsers.
+
 To include the styles in your HTML, use the following links:
 
 ```html
 <!-- Core Stylesheet -->
-<link rel="stylesheet" href="path/to/styles/core.css" />
+<link rel="stylesheet" href="path/to/styles/core.scss" />
 
 <!-- Advanced Stylesheet (conditionally served) -->
 <link
   rel="stylesheet"
   id="advanced-stylesheet"
-  href="path/to/styles/advanced.css"
+  href="path/to/styles/advanced.scss"
   media="
     only print,
     only all and (pointer: fine), only all and (pointer: coarse), only all and (pointer: none),
@@ -113,7 +119,7 @@ To include the styles in your HTML, use the following links:
 />
 
 <!-- Print Stylesheet -->
-<link rel="stylesheet" href="path/to/styles/print.css" />
+<link rel="stylesheet" href="path/to/styles/print.scss" />
 ```
 
 ### Applying the Theme
@@ -130,7 +136,7 @@ To apply the theme to your project, you can generate CSS custom properties in on
    }
    ```
 
-   Alternatively, you can generate CSS custom properties based on specific token types. For example, to generate variables for "global" or "contextual-generic" tokens:
+   Alternatively, you can generate CSS custom properties based on specific token types. For example, to generate variables for "global" or "contextual-generic" tokens. Token types are defined in the `_theme-applier.scss` file.
 
    ```scss
    :root {
