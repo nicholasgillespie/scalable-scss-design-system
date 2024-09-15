@@ -162,8 +162,8 @@ The design system includes the `get` function in `_theme-accessor.scss`, allowin
 
   ```scss
   body {
-    color: get(color, global);
-    background-color: get(background, global);
+    color: get("color", "global");
+    background-color: get("background", "global");
   }
   ```
 
