@@ -98,7 +98,7 @@ After adding the design system to your project, you can start utilizing the desi
 
 ### Importing the Styles
 
-To ensure compatibility and progressive enhancement, we suggest considering the [CSS Only Mustard Cut](https://github.com/Fall-Back/CSS-Mustard-Cut?tab=readme-ov-file#css-only-mustard-cut). This method conditionally serves advanced styles based on feature support while providing a basic, functional experience across all browsers. However, you are free to choose the setup that best fits your
+To ensure compatibility and progressive enhancement, we suggest considering the [CSS Only Mustard Cut](https://github.com/Fall-Back/CSS-Mustard-Cut?tab=readme-ov-file#css-only-mustard-cut). This method conditionally serves advanced styles based on feature support while providing a basic, functional experience across all browsers. However, you are free to choose the setup that best fits your choice.
 
 Include the styles in your HTML as follows:
 
