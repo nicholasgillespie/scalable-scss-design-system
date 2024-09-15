@@ -1,6 +1,6 @@
 # Scalable SCSS Design System
 
-Welcome to the **Scalable SCSS Design System**! This repository offers a modular and scalable design system built with [SCSS](https://sass-lang.com/), designed for easy integration into any project.
+Welcome to the **Scalable SCSS Design System**. This repository offers a modular and scalable design system built with [SCSS](https://sass-lang.com/), designed for easy integration into any project.
 
 Inspired by [Andy Bell's](https://set.studio/) [CUBE CSS Boilerplate](https://github.com/Set-Creative-Studio/cube-boilerplate/blob/main/README.md) and incorporating the [CUBE CSS methodology](https://cube.fyi/), the system provides consistent design application and maintainability. It integrates the file architecture and class naming conventions from the in-development [W3C design system](https://design-system.w3.org/), providing an organized and efficient structure.
 
