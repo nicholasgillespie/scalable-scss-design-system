@@ -156,7 +156,7 @@ To apply the theme to your project, generate CSS custom properties as follows:
 
 ### Accessing Theme Values with the `get` Function
 
-The design system includes the `get` function in `_theme-accessor.scss`, allowing dynamic application of theme values:
+This system includes a single `get` function in `_theme-accessor.scss`, allowing dynamic application of theme values:
 
 - **Retrieve CSS Variables**: Use the `get` function to fetch the CSS variable associated with a design token:
 
@@ -169,7 +169,7 @@ The design system includes the `get` function in `_theme-accessor.scss`, allowin
 
 - **Dynamic Property Application**: The `get` function supports various properties and values, ensuring alignment with the defined theme.
 
-- **Error Handling**: Includes built-in error handling to maintain design integrity and aid debugging.
+- **Error Handling**: Provides available properties and values to aid debugging and maintain design integrity.
 
 ### Generating Utility Classes
 
