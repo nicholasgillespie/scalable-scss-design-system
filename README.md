@@ -128,7 +128,7 @@ To apply the theme to your project, generate CSS custom properties as follows:
 
 1. **Generate Theme Variables:**
 
-   To apply the full theme, include the `generateThemeVariables` mixin in the `:root` selector of the [`30-base/_root.scss`](./styles/30-base/root.scss) file. This generates global CSS custom properties for all design tokens defined in `_theme-config.scss`.
+   To apply the full theme, include the `generateThemeVariables` mixin in the `:root` selector within the `root.scss` file. This generates global CSS custom properties for all design tokens defined in `_theme-config.scss`.
 
    ```scss
    :root {
