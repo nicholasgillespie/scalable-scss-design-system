@@ -94,7 +94,7 @@ To integrate this design system into your project:
 
 ## Usage
 
-After adding the design system to your project, you can start utilizing the design tokens, mixins, and utility classes provided.
+After adding the design system to your project, you can start using the design tokens, mixins, and utility classes provided.
 
 ### Importing the Styles
 
