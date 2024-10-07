@@ -326,6 +326,8 @@ $class-type-prefix: map-get(config.$class-type-prefixes, utilities);
 
               // Generate utility class for theme items
               @if $property-or-alt-name == $item-name-prop {
+                // // Uncomment to see utility classes for general theme items
+                // @debug ".#{$class-type-prefix}#{$category}-#{$item-name} | #{$css-property}: var(--#{$group-prefix}-#{$category}-#{$item-name})";
                 .#{$class-type-prefix}#{$category}-#{$item-name} {
                   #{$css-property}: var(
                     --#{$group-prefix}-#{$category}-#{$item-name}
@@ -338,11 +340,14 @@ $class-type-prefix: map-get(config.$class-type-prefixes, utilities);
                 "base" and
                 index($exception-exclude-base-suffix, $group-key)
               {
+                // // Uncomment to see utility classes for 'base' items from the token theme
+                // @debug ".#{$class-type-prefix}#{$property-or-alt-name}-base | #{$css-property}: var(--#{$group-prefix})";
                 .#{$class-type-prefix}#{$property-or-alt-name}-base {
                   #{$css-property}: var(--#{$group-prefix});
                 }
               } @else {
-                // Generate utility class for non-theme items
+                // // Uncomment to see generated utility classes for token theme items
+                // @debug ".#{$class-type-prefix}#{$property-or-alt-name}-#{$item-name} | #{$css-property}: var(--#{$group-prefix}-#{$item-name})";
                 .#{$class-type-prefix}#{$property-or-alt-name}-#{$item-name} {
                   #{$css-property}: var(--#{$group-prefix}-#{$item-name});
                 }
@@ -380,6 +385,8 @@ $class-type-prefix: map-get(config.$class-type-prefixes, utilities);
       $property: "--#{$prefix}";
 
       @each $item-name, $item-value in $token {
+        // // Uncomment to see generated utility classes for spacing-related theme items in layout utilities
+        // @debug ".#{$class-type-prefix}#{$prefix}-#{$item-name} | #{$property}: var(--#{$token-prefix}-#{$item-name})";
         .#{$class-type-prefix}#{$prefix}-#{$item-name} {
           #{$property}: var(--#{$token-prefix}-#{$item-name});
         }

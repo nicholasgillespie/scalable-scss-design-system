@@ -3,12 +3,15 @@
  * A utility that hides an element visually but keeps it accessible to
  * assistive technologies like screen readers.
  * Info: https://www.scottohara.me/blog/2017/04/14/inclusively-hidden.html
+ *
+ * Also includes styles for the [hidden] attribute to completely hide
+ * elements from view.
  */
 
 @use "../00-settings/theme-config" as *;
 $prefix: map-get($class-type-prefixes, utilities);
 
-.#{$prefix}vh:not(:focus):not(:active) {
+.#{$prefix}visually-hidden:not(:focus):not(:active) {
   inline-size: 1px;
   block-size: 1px;
   overflow: hidden;
@@ -16,4 +19,8 @@ $prefix: map-get($class-type-prefixes, utilities);
   clip-path: inset(50%);
   position: absolute;
   white-space: nowrap;
+}
+
+[hidden] {
+  display: none !important;
 }

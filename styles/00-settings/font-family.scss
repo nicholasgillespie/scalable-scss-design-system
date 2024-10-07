@@ -5,6 +5,9 @@
  *
  * Each array of fonts creates a priority-based order. The first font in the 
  * array should be the ideal font, followed by sensible, web-safe fallbacks.
+ *
+ * Fonts are categorized into three groups: display (headings), accent 
+ * (subheadings, lede), and base (body).
  */
 
 $token: (
@@ -25,12 +28,19 @@ $token: (
         "monospace",
       ),
     ),
+    (
+      "name": "Accent",
+      "value": (
+        "Space Mono",
+        "monospace",
+      ),
+    ),
     // (
     //   "name": "Mono",
     //   "value": (
     //     "Space Mono",
     //     "monospace",
     //   ),
-    // ),,
+    // ),,,
   ),
 );

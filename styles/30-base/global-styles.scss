@@ -21,6 +21,7 @@ body {
   // letter-spacing: get(letter-spacing, base);
   word-break: break-word;
   font-size-adjust: from-font;
+  interpolate-size: allow-keywords;
 }
 
 // DOCUMENT STRUCTURE ////////////////////
