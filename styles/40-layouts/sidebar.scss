@@ -2,6 +2,7 @@
  * SIDEBAR
  * A layout that provides a flexible sidebar and main content area.
  * Info: https://every-layout.dev/layouts/sidebar/
+ * Info: https://piccalil.li/blog/building-a-breakout-element-with-container-units/
  * 
  * CUSTOM PROPERTIES AND CONFIGURATION
  * --sidebar-target-width: The preferred width of the sidebar.
@@ -23,18 +24,25 @@ $prefix: map-get($class-type-prefixes, layouts);
   align-items: var(--sidebar-vertical-alignment, stretch);
   gap: var(--space-sidebar, var(--space-gutter));
 
-  & > :where(.sidebar, :first-child) {
+  &:not([data-direction="rtl"]) > :first-child {
     flex-basis: var(--sidebar-target-width, 20rem);
     flex-grow: 1;
   }
 
-  & > :where(.not-sidebar, :last-child) {
+  &:not([data-direction="rtl"]) > :last-child {
     flex-basis: 0;
     flex-grow: 999;
-    min-inline-size: var(--sidebar-content-min-width, 60%);
+    min-width: var(--sidebar-content-min-width, 50%);
   }
 
-  &[data-sidebar="rtl"] {
-    flex-direction: row-reverse;
+  &[data-direction="rtl"] > :last-child {
+    flex-basis: var(--sidebar-target-width, 20rem);
+    flex-grow: 1;
+  }
+
+  &[data-direction="rtl"] > :first-child {
+    flex-basis: 0;
+    flex-grow: 999;
+    min-width: var(--sidebar-content-min-width, 50%);
   }
 }

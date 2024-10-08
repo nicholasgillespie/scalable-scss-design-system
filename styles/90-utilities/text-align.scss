@@ -1,0 +1,16 @@
+@use "../00-settings/theme-config" as *;
+$prefix: map-get($class-type-prefixes, utilities);
+
+.#{$prefix}text-align {
+  &-center {
+    text-align: center;
+  }
+
+  &-start {
+    text-align: start;
+  }
+
+  &-end {
+    text-align: end;
+  }
+}
