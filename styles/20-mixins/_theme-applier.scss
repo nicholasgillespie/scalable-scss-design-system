@@ -261,10 +261,10 @@ $class-type-prefix: map-get(config.$class-type-prefixes, utilities);
 
         // Generate utility classes for auto and zero spacing
         @if $group-key == "spacing" {
-          // // Uncomment to enable abbreviated property names
-          // $property-or-alt-name: help-str.abbreviate(
-          //   help-str.listToString($group-property, "-")
-          // );
+          // Uncomment to enable abbreviated property names
+          $property-or-alt-name: help-str.abbreviate(
+            help-str.listToString($group-property, "-")
+          );
 
           .#{$class-type-prefix}#{$property-or-alt-name}-auto {
             #{$css-property}: auto;
@@ -389,6 +389,12 @@ $class-type-prefix: map-get(config.$class-type-prefixes, utilities);
         // @debug ".#{$class-type-prefix}#{$prefix}-#{$item-name} | #{$property}: var(--#{$token-prefix}-#{$item-name})";
         .#{$class-type-prefix}#{$prefix}-#{$item-name} {
           #{$property}: var(--#{$token-prefix}-#{$item-name});
+        }
+
+        // // Uncomment to see generated utility classes for spacing-related theme items with zero value
+        // @debug ".#{$class-type-prefix}#{$prefix}-zero | #{$property}: 0";
+        .#{$class-type-prefix}#{$prefix}-zero {
+          #{$property}: 0;
         }
       }
     }
