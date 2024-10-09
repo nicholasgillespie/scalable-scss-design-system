@@ -20,5 +20,6 @@ $prefix: map-get($class-type-prefixes, layouts);
   flex-wrap: var(--cluster-flex-wrap, wrap);
   justify-content: var(--cluster-horizontal-alignment, flex-start);
   align-items: var(--cluster-vertical-alignment, center);
+  align-content: var(--cluster-content-alignment, center);
   gap: var(--space-cluster, var(--space-gutter));
 }
