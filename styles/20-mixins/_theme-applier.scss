@@ -384,17 +384,17 @@ $class-type-prefix: map-get(config.$class-type-prefixes, utilities);
     @each $prefix in $custom-utility-prefixes {
       $property: "--#{$prefix}";
 
+      // // Uncomment to see generated utility classes for spacing-related theme items with zero value
+      // @debug ".#{$class-type-prefix}#{$prefix}-zero | #{$property}: 0";
+      .#{$class-type-prefix}#{$prefix}-zero {
+        #{$property}: 0;
+      }
+
       @each $item-name, $item-value in $token {
         // // Uncomment to see generated utility classes for spacing-related theme items in layout utilities
         // @debug ".#{$class-type-prefix}#{$prefix}-#{$item-name} | #{$property}: var(--#{$token-prefix}-#{$item-name})";
         .#{$class-type-prefix}#{$prefix}-#{$item-name} {
           #{$property}: var(--#{$token-prefix}-#{$item-name});
-        }
-
-        // // Uncomment to see generated utility classes for spacing-related theme items with zero value
-        // @debug ".#{$class-type-prefix}#{$prefix}-zero | #{$property}: 0";
-        .#{$class-type-prefix}#{$prefix}-zero {
-          #{$property}: 0;
         }
       }
     }
