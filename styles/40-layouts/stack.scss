@@ -23,16 +23,13 @@ $prefix: map-get($class-type-prefixes, layouts);
   display: flex;
   flex-direction: column;
   justify-content: var(--stack-vertical-alignment, flex-start);
-  align-items: var(--stack-horizontal-alignment, flex-start);
+  align-items: var(--stack-horizontal-alignment, stretch);
 
   & > * {
     margin-block: 0;
   }
 
   & > * + * {
-    margin-block-start: var(
-      --space-stack,
-      calc(var(--line-height-base) * 1rem)
-    );
+    margin-block-start: var(--space-stack, calc(var(--leading) * 1rem));
   }
 }
