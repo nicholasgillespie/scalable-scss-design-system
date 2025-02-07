@@ -82,7 +82,7 @@ To integrate this design system into your project:
    Install Sass as a development dependency:
 
    ```bash
-   npm install --save-dev sass
+   npm install --save-dev sass-embedded
    ```
 
 3. **Include in SCSS Build**:
