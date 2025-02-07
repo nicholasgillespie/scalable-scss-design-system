@@ -74,7 +74,7 @@ To integrate this design system into your project:
    Clone the repository into your desired project location (e.g., `src` folder):
 
    ```bash
-   git clone https://github.com/your-username/scalable-scss-design-system.git
+   git clone https://github.com/nicholasgillespie/scalable-scss-design-system.git
    ```
 
 2. **Install Dependencies**:
