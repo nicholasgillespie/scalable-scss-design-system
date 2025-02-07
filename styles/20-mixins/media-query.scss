@@ -3,11 +3,11 @@
  *
  * This file contains a mixin for handling media queries based on theme 
  * breakpoints. It includes logic for converting breakpoint values, setting 
- * units, and validating conditions.
+ * units, validating conditions, and optionally including gutter values.
  * 
  * MIXIN:
  * - media-query: Handles media queries for different conditions and 
- *   breakpoints.
+ *   breakpoints, with an option to include gutter values.
  *
  * MIXIN DETAILS:
  * - media-query:
@@ -16,13 +16,15 @@
  *   @param {String|null} $breakpoint1 - The first breakpoint value.
  *   @param {String|null} $breakpoint2 - The second breakpoint value 
  *     (optional).
+ *   @param {Boolean} $include-gutter - Whether to include the gutter value in 
+ *     the media query calculation (default: false).
  *   @param {List} $extra-args - Additional arguments (optional).
  *
  * USAGE:
  * @use "./../20-mixins/media-query.scss" as *;
  *
- * @include media-query("up-to", "laptop") {
- *   // Styles for small screens and below
+ * @include media-query("up-to", "laptop", true) {
+ *   // Styles for small screens and below, including gutter
  * }
  *
  * NOTE:
