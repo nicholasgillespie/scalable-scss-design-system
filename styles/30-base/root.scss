@@ -1,40 +1,33 @@
-@use "../20-mixins/theme-applier" as *;
-// @use "../10-functions/theme-accessor" as *;
+@use "../20-mixins/theme-applier.scss" as *;
 
 // Global tokens
 :root {
   @include generateThemeVariables("global");
 
   // @supports (color: color(display-p3 1 1 1)) {
-  //   @include generateTokenVariables("palette", "transformColorP3");
+  //   @include generateTokenVariables("color-palette", "transformColorP3");
   // }
 }
 
 // Contextual-generic tokens
 :root {
   @include generateThemeVariables("contextual-generic");
-
-  // Decorations
-  // --focus-color: #{get(color, slightly-desaturated-cyan)};
-  // --border-color: transparent;
-  // --border-width: 1px;
-  // --border: solid var(--border-width) var(--border-color);
-  // --shadow: 0px 8px 24px rgba(0, 0, 0, 0.1);
 }
-
-:root {
-  @media (prefers-color-scheme: dark) {
-    @include generateTokenVariables("theme", "selectTheme", "dark");
-  }
-}
-
-// body[data-theme="dark"] {
-//   @include generateTokenVariables("theme", "selectTheme", "dark");
-// }
-
-// body[data-theme="light"] {
-//   @include generateTokenVariables("theme", "selectTheme", "light");
-// }
 
 // Component-specific tokens
 // Contextual-content tokens
+
+// Theming
+:root {
+  @media (prefers-color-scheme: dark) {
+    @include generateTokenVariables("color-theme", "selectTheme", "dark");
+  }
+}
+
+body[data-theme="dark"] {
+  @include generateTokenVariables("color-theme", "selectTheme", "dark");
+}
+
+body[data-theme="light"] {
+  @include generateTokenVariables("color-theme", "selectTheme", "light");
+}

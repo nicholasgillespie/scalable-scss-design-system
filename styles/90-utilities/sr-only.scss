@@ -1,17 +1,17 @@
 /*
- * VISUALLY HIDDEN
+ * VISUALLY HIDDEN / SCREEN READER ONLY
  * A utility that hides an element visually but keeps it accessible to
  * assistive technologies like screen readers.
  * Info: https://www.scottohara.me/blog/2017/04/14/inclusively-hidden.html
  *
  * Also includes styles for the [hidden] attribute to completely hide
  * elements from view.
+ *
+ * A mixin was implemented to allow inclusion within media queries and
+ * other nested rules, avoiding duplication and specificity issues.
  */
 
-@use "../00-settings/theme-config" as *;
-$prefix: map-get($class-type-prefixes, utilities);
-
-.#{$prefix}visually-hidden:not(:focus):not(:active) {
+@mixin sr-only {
   inline-size: 1px;
   block-size: 1px;
   overflow: hidden;
@@ -19,6 +19,10 @@ $prefix: map-get($class-type-prefixes, utilities);
   clip-path: inset(50%);
   position: absolute;
   white-space: nowrap;
+}
+
+.sr-only:not(:focus):not(:active) {
+  @include sr-only;
 }
 
 [hidden] {

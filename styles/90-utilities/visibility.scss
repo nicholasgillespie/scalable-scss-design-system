@@ -1,0 +1,17 @@
+/*
+ * VISIBILITY
+ * A utility that sets the visibility property of an element.
+ * Equivalent Tailwind CSS classes
+ */
+
+.visible {
+  visibility: visible;
+}
+
+.invisible {
+  visibility: hidden;
+}
+
+.collapse {
+  visibility: collapse;
+}

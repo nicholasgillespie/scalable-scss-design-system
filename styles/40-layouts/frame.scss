@@ -8,10 +8,7 @@
  * --frame-height: The height of the frame.
  */
 
-@use "../00-settings/theme-config" as *;
-$prefix: map-get($class-type-prefixes, layouts);
-
-.#{$prefix}frame {
+.frame {
   aspect-ratio: var(--frame-width, 16) / var(--frame-height, 9);
   overflow: hidden;
   display: flex;

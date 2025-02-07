@@ -1,0 +1,27 @@
+/*
+ * INLINE SIZE
+ * A utility that sets the inline size (width) of an element using logical properties.
+ * Equivalent Tailwind CSS classes: .w-auto, .w-full, .w-fit, .w-max, .w-min
+ */
+
+.w {
+  &-auto {
+    inline-size: auto;
+  }
+
+  &-full {
+    inline-size: 100%;
+  }
+
+  &-fit {
+    inline-size: fit-content;
+  }
+
+  &-max {
+    inline-size: max-content;
+  }
+
+  &-min {
+    inline-size: min-content;
+  }
+}

@@ -1,38 +1,48 @@
 /*
- * WRAPPER
- * A layout that constrains the width of its content, centering it in the
- * available space and adding padding on the sides.
- * Info: https://piccalil.li/quick-tip/use-css-clamp-to-create-a-more-flexible-wrapper-utility/
- * 
- * CUSTOM PROPERTIES AND CONFIGURATION
- * --wrapper-max-inline-size: The maximum width of the content.
- * --wrapper-gutter: The padding on the sides of the content.
- * 
- * DATA ATTRIBUTES
- * A data attribute [data-wrapper="full-width"] can be used to make the wrapper
- * full width.
- * A data attribute [data-wrapper="gutterless"] can be used to remove the padding
- * from the sides of the wrapper.
- */
+WRAPPER COMPOSITION 
+A common wrapper/container
+*/
 
-@use "../00-settings/theme-config" as *;
-$prefix: map-get($class-type-prefixes, layouts);
+@use "sass:map";
+@use "../00-settings/theme-config.scss" as config;
 
-.#{$prefix}wrapper {
+// Store breakpoints in variable
+$breakpoints: map.get(config.$theme, "breakpoints");
+
+.wrapper {
   inline-size: 100%;
   max-inline-size: calc(
-    var(--wrapper-max-inline-size, var(--layout-base-max)) +
-      var(--space-wrapper, var(--space-gutter)) * 2
+    var(--wrapper-max, var(--layout-max)) + 2 * var(--space-gutter)
   );
-  margin-inline: auto;
   padding-inline: var(--space-wrapper, var(--space-gutter));
+  margin-inline: auto;
   position: relative;
 
-  &[data-wrapper="gutterless"] {
-    --space-wrapper: 0px;
+  &[data-wrapper="mobile"] {
+    --wrapper-max: calc(#{map.get($breakpoints, "mobile")});
   }
 
-  &[data-wrapper="full-width"] {
-    --wrapper-max-inline-size: 100%;
+  &[data-wrapper="tablet"] {
+    --wrapper-max: #{map.get($breakpoints, "tablet")};
+  }
+
+  &[data-wrapper="laptop"] {
+    --wrapper-max: #{map.get($breakpoints, "laptop")};
+  }
+
+  &[data-wrapper="desktop"] {
+    --wrapper-max: #{map.get($breakpoints, "desktop")};
+  }
+
+  &[data-wrapper="widescreen"] {
+    --wrapper-max: #{map.get($breakpoints, "widescreen")};
+  }
+
+  &[data-wrapper="gutterless"] {
+    --wrapper-space: 0px;
+  }
+
+  &[data-wrapper="fullscreen"] {
+    --wrapper-max: 100%;
   }
 }

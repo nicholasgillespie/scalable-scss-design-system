@@ -1,17 +1,20 @@
-// Import functions and helpers
+// Import Sass modules functions and helpers
+@use "sass:map";
+@use "sass:list";
+@use "sass:meta";
 @use "../process-token.scss" as *;
 @use "../process-clamp.scss" as *;
-@use "./handle-string" as help-str;
+@use "./handle-string.scss" as help-str;
 
 // Import design tokens
-@use "../../00-settings/spacing.scss" as spacing;
-@use "../../00-settings/step-size.scss" as step-size;
-@use "../../00-settings/viewport" as viewport;
+@use "../../00-settings/scale-space.scss" as scale-space;
+@use "../../00-settings/scale-step.scss" as scale-step;
+@use "../../00-settings/viewport.scss" as viewport;
 
 // Define exception list for tokens that require clamping
 $exception-clamp-tokens: (
-  map-get(spacing.$token, "title"),
-  map-get(step-size.$token, "title")
+  map.get(scale-space.$token, "title"),
+  map.get(scale-step.$token, "title")
 );
 
 /**
@@ -37,7 +40,7 @@ $exception-clamp-tokens: (
   }
 
   // Check if token title is in exception list and process it accordingly.
-  @if index($exception-clamp-tokens, map-get($token, "title")) {
+  @if list.index($exception-clamp-tokens, map.get($token, "title")) {
     $viewport: processToken(viewport.$token);
     $token: processToken(processClamp($token, $viewport));
   } @else {
@@ -45,10 +48,10 @@ $exception-clamp-tokens: (
   }
 
   // Retrieve token keys.
-  $keys: map-keys($token);
+  $keys: map.keys($token);
 
   // Check if the key is null or empty, warn and return null if true.
-  @if $key == null or length($key) == 0 {
+  @if $key == null or list.length($key) == 0 {
     @warn "No value provided. Available options: #{$keys}.";
     @return null;
   }
@@ -60,11 +63,11 @@ $exception-clamp-tokens: (
   }
 
   // Convert $key to a string if it's a number and then to a slugified format.
-  $key: if(type-of($key) == "number", "#{ $key }", $key);
-  $key: help-str.slugify(inspect($key));
+  $key: if(meta.type-of($key) == "number", "#{ $key }", $key);
+  $key: help-str.slugify(meta.inspect($key));
 
   // Validate key, return CSS variable or warn if invalid.
-  @if index($keys, $key) {
+  @if list.index($keys, $key) {
     @if $key == "base" and $exclude-base-suffix {
       @return "var(--#{$token-prefix})";
     } @else {

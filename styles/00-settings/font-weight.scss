@@ -1,52 +1,51 @@
-/*
- * FILE: font-weight.scss
- *
- * This file defines the font weight values used in the project.
- *
- * The `items` map includes:
- *  - Font weight name (e.g., "Normal", "Bold")
- *  - Corresponding numeric value for the font weight
- */
-
 $token: (
   "title": "Font Weight",
   "description": "Defines the font weight values used in the project.",
   "items": (
+    (
+      // Standard font weight for regular text
+      "name": "Base",
+      "value": 400
+    ),
     // (
+    //   // Thin font weight for very light text
     //   "name": "Thin",
     //   "value": 100,
     // ),
     // (
+    //   // Extra light font weight for light text
     //   "name": "Extra Light",
     //   "value": 200,
     // ),
     // (
+    //   // Light font weight for slightly lighter text
     //   "name": "Light",
     //   "value": 300,
     // ),
     (
-        "name": "Normal",
-        "value": 400,
+        // Medium font weight for moderately bold text
+        "name": "Medium",
+        "value": 500
       ),
     // (
-    //   "name": "Medium",
-    //   "value": 500,
-    // ),
-    // (
+    //   // Semi bold font weight for semi-bold text
     //   "name": "Semi Bold",
     //   "value": 600,
     // ),
     (
+        // Bold font weight for bold text
         "name": "Bold",
-        "value": 700,
+        "value": 700
       ),
     // (
+    //   // Extra bold font weight for very bold text
     //   "name": "Extra Bold",
     //   "value": 800,
     // ),
     // (
+    //   // Black font weight for the boldest text
     //   "name": "Black",
     //   "value": 900,
-    // ),,
+    // ),,,
   ),
 );

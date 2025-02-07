@@ -15,24 +15,27 @@
  */
 
 // Import design tokens
-@use "../00-settings/spacing" as spacing;
-@use "../00-settings/step-size" as step-size;
+@use "../00-settings/scale-space.scss" as scale-space;
+@use "../00-settings/scale-step.scss" as scale-step;
 
 // Import modules and helper functions
+@use "sass:map";
+@use "sass:meta";
 @use "sass:math";
-@use "./helpers/handle-number" as help-num;
+@use "sass:list";
+@use "./helpers/handle-number.scss" as help-num;
 
 // Define settings for different scales
 $scale-settings: (
   (
-    "title": map-get(spacing.$token, "title"),
+    "title": map.get(scale-space.$token, "title"),
     "unit-type": "px",
-    "relative-unit-type": "vi",
+    "relative-unit-type": "vw",
   ),
   (
-    "title": map-get(step-size.$token, "title"),
+    "title": map.get(scale-step.$token, "title"),
     "unit-type": "rem",
-    "relative-unit-type": "vi",
+    "relative-unit-type": "vw",
   )
 );
 
@@ -44,16 +47,16 @@ $scale-settings: (
  * @param {Map} $viewport - The viewport settings.
  * @return {Map} - The updated token with clamp() values.
  */
-@function processClamp($token, $viewport) {
+@function processClamp($token, $viewport, $unit-type: "rem") {
   // Retrieve 'items' and 'title' from the token
-  $items: map-get($token, "items");
-  $title: map-get($token, "title");
+  $items: map.get($token, "items");
+  $title: map.get($token, "title");
 
   // Generate clamp values for the items
-  $items: generateClamp($items, $title, $viewport);
+  $items: generateClamp($items, $title, $viewport, $unit-type);
 
   // Update the token with the new items
-  $token: map-merge(
+  $token: map.merge(
     $token,
     (
       "items": $items,
@@ -73,37 +76,45 @@ $scale-settings: (
  * @param {Map} $viewport - The viewport settings.
  * @return {List} - The items with generated clamp() values.
  */
-@function generateClamp($items, $title, $viewport) {
+@function generateClamp($items, $title, $viewport, $unit-type) {
   $result: ();
 
-  // Retrieve viewport values
-  $viewport-min: help-num.remToPx(map-get($viewport, "min"));
-  $viewport-max: help-num.remToPx(map-get($viewport, "max"));
+  // Normalize unit-type and retrieve viewport values
+  $unit-type: if($unit-type == "px", "px", "rem");
+  $unit: if($unit-type == "px", 1px, 0.0625rem);
+  $viewport-min: map.get($viewport, "min");
+  $viewport-max: map.get($viewport, "max");
 
-  // Retrieve settings based on the title
-  $unit-type: "rem";
+  @if $unit-type == "rem" {
+    $viewport-min: help-num.remToPx($viewport-min);
+    $viewport-max: help-num.remToPx($viewport-max);
+  }
+
+  // Retrieve settings for the title
   $relative-unit-type: "vw";
-  @each $setting in $scale-settings {
-    @if map-get($setting, "title") == $title {
-      $unit-type: map-get($setting, "unit-type");
-      $relative-unit-type: map-get($setting, "relative-unit-type");
+  @if meta.variable-exists(scale-settings) {
+    @each $setting in $scale-settings {
+      @if map.get($setting, "title") == $title {
+        $unit-type: map.get($setting, "unit-type");
+        $relative-unit-type: map.get($setting, "relative-unit-type");
+        $unit: if($unit-type == "px", 1px, 0.0625rem);
+      }
     }
   }
-  $unit: if($unit-type == "px", 1px, 0.0625rem);
 
-  // Set the relative unit based on the $relative-unit-type parameter
-  $relative-unit: 1vw;
-  @if ($relative-unit-type == "cqi") {
-    $relative-unit: 1cqi;
-  } @else if ($relative-unit-type == "vi") {
-    $relative-unit: 1vi;
-  }
+  // Define relative units mapping
+  $relative-units: (
+    "vw": 1vw,
+    "cqi": 1cqi,
+    "vi": 1vi,
+  );
+  $relative-unit: map.get($relative-units, $relative-unit-type) or 1vw;
 
   // Loop through each item in the token
   @each $item in $items {
-    $item-name: map-get($item, "name");
-    $item-min: map-get($item, "min");
-    $item-max: map-get($item, "max");
+    $item-name: map.get($item, "name");
+    $item-min: help-num.stripUnit(map.get($item, "min"));
+    $item-max: help-num.stripUnit(map.get($item, "max"));
 
     // If the minimum size is greater than the maximum size, swap them
     $should-swap-sizes: $item-min > $item-max;
@@ -127,7 +138,7 @@ $scale-settings: (
     $item-value: "clamp(#{help-num.roundValue($item-min * $unit)}, #{help-num.roundValue($intersection * $unit)} + #{help-num.roundValue($slope * 100) * $relative-unit}, #{help-num.roundValue($item-max * $unit)})";
 
     // Add the item's name and clamp() value to the result
-    $result: append(
+    $result: list.append(
       $result,
       (
         $item-name: $item-value,

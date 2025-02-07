@@ -6,17 +6,24 @@
  * units, and validating conditions.
  * 
  * MIXIN:
- * - mediaQuery: Handles media queries for different conditions and 
+ * - media-query: Handles media queries for different conditions and 
  *   breakpoints.
  *
  * MIXIN DETAILS:
- * - mediaQuery:
+ * - media-query:
  *   @param {String|null} $condition - The condition for the media query 
  *     (e.g., "up-to", "from", "from-to").
  *   @param {String|null} $breakpoint1 - The first breakpoint value.
  *   @param {String|null} $breakpoint2 - The second breakpoint value 
  *     (optional).
  *   @param {List} $extra-args - Additional arguments (optional).
+ *
+ * USAGE:
+ * @use "./../20-mixins/media-query.scss" as *;
+ *
+ * @include media-query("up-to", "laptop") {
+ *   // Styles for small screens and below
+ * }
  *
  * NOTE:
  * For media queries, it's generally a good idea to use rems instead of pixels.
@@ -32,50 +39,60 @@
  *   settings.
  */
 
-@use "../00-settings/theme-config" as config;
+@use "../00-settings/theme-config.scss" as config;
 @use "../10-functions/helpers/handle-number.scss" as help-num;
+@use "sass:map";
+@use "sass:list";
 
-@mixin mediaQuery(
+@mixin media-query(
   $condition: null,
   $breakpoint1: null,
   $breakpoint2: null,
+  $include-gutter: false,
   $extra-args...
 ) {
-  // Retrieving the breakpoints from the theme
-  $breakpoints: map-get(config.$theme, "breakpoints");
+  // Retrieving the breakpoints and unit-type from the theme
+  $breakpoints: map.get(config.$theme, "breakpoints");
+  $unit-type: config.$unit-type;
+
+  // Retrieve the gutter value with a fallback
+  $gutter: if(
+    map.has-key(config.$theme, "scale-space") and
+      map.has-key(map.get(config.$theme, "scale-space"), "s"),
+    map.get(map.get(config.$theme, "scale-space"), "s"),
+    0
+  );
 
   // Converting the breakpoint values to numbers if they exist and are valid
   $breakpoint1-value: if(
-    $breakpoint1 and map-has-key($breakpoints, $breakpoint1),
+    $breakpoint1 and map.has-key($breakpoints, $breakpoint1),
     help-num.stripUnit(
-      help-num.stringToNumber(map-get($breakpoints, $breakpoint1))
+      help-num.stringToNumber(map.get($breakpoints, $breakpoint1))
     ),
     null
   );
   $breakpoint2-value: if(
-    $breakpoint2 and map-has-key($breakpoints, $breakpoint2),
+    $breakpoint2 and map.has-key($breakpoints, $breakpoint2),
     help-num.stripUnit(
-      help-num.stringToNumber(map-get($breakpoints, $breakpoint2))
+      help-num.stringToNumber(map.get($breakpoints, $breakpoint2))
     ),
     null
   );
-
-  // Setting the unit of measurement
-  $unit: "rem";
 
   // Creating a list of available breakpoints
   $available-breakpoints: ();
   @each $key, $value in $breakpoints {
     $value: help-num.stripUnit(help-num.stringToNumber($value));
-    $available-breakpoints: append(
+    $available-breakpoints: list.append(
       $available-breakpoints,
-      "#{$key} (#{$value}#{$unit})",
+      "#{$key} (#{$value}#{$unit-type})",
       "comma"
     );
   }
 
   // Checking the validity of the condition
-  @if not $condition or not index(("up-to", "from", "from-to"), $condition) {
+  @if not $condition or not list.index(("up-to", "from", "from-to"), $condition)
+  {
     @warn "Invalid or missing condition. Available conditions are: 'up-to', 'from', 'from-to'.";
   } @else {
     // Handling different conditions
@@ -84,7 +101,7 @@
       @if not $breakpoint1-value {
         @warn "Invalid or missing breakpoint for the 'up-to' condition. Available breakpoints are: #{$available-breakpoints}.";
       } @else {
-        @media (max-width: #{$breakpoint1-value}#{$unit}) {
+        @media (max-width: #{if($include-gutter, "calc(#{$breakpoint1-value - 0.001}#{$unit-type} + calc(#{$gutter} * 2))", "#{$breakpoint1-value - 0.001}#{$unit-type}")}) {
           @content;
         }
       }
@@ -94,7 +111,7 @@
       @if not $breakpoint1-value {
         @warn "Invalid or missing breakpoint for the 'from' condition. Available breakpoints are: #{$available-breakpoints}.";
       } @else {
-        @media (min-width: #{($breakpoint1-value + 0.001)}#{$unit}) {
+        @media (min-width: #{if($include-gutter, "calc(#{$breakpoint1-value}#{$unit-type} + calc(#{$gutter} * 2))", "#{$breakpoint1-value}#{$unit-type}")}) {
           @content;
         }
       }
@@ -112,7 +129,11 @@
           $breakpoint1-value: $breakpoint2-value;
           $breakpoint2-value: $temp;
         }
-        @media (min-width: #{($breakpoint1-value + 0.001)}#{$unit}) and (max-width: #{$breakpoint2-value}#{$unit}) {
+        @media (min-width: #{
+          if($include-gutter, "calc(#{$breakpoint1-value}#{$unit-type} + calc(#{$gutter} * 2))", "#{$breakpoint1-value}#{$unit-type}")
+        }) and (max-width: #{
+          if($include-gutter, "calc(#{$breakpoint2-value - 0.001}#{$unit-type} + calc(#{$gutter} * 2))", "#{$breakpoint2-value - 0.001}#{$unit-type}")
+        }) {
           @content;
         }
       }

@@ -1,14 +1,16 @@
+// Modern reset: https://piccalil.li/blog/a-more-modern-css-reset/
+
 // Box sizing rules
 *,
 *::before,
 *::after {
   box-sizing: border-box;
+  margin: 0;
+  padding: 0;
 }
 
-// Set color scheme, scroll behavior and prevent font size inflation
+// Prevent font size inflation
 html {
-  // color-scheme: light dark;
-  scroll-behavior: smooth;
   -moz-text-size-adjust: none;
   -webkit-text-size-adjust: none;
   text-size-adjust: none;
@@ -16,32 +18,25 @@ html {
 
 // Set core body defaults
 body {
-  min-block-size: min(100dvh, 100vh);
+  min-block-size: max(100vh, 100dvh);
   text-rendering: optimizeSpeed;
-  writing-mode: horizontal-tb;
-  direction: ltr;
-  overflow-x: hidden;
-  // line-height: 1.5;
+  // overflow-x: clip;
+  // overflow-inline: clip;
 }
 
-// Set shorter line heights on headings and interactive elements
-// h1,
-// h2,
-// h3,
-// h4,
-// button,
-// input,
-// label {
-//   line-height: 1.1;
-// }
-
-// Remove list styles on ul, ol elements with a list role, which suggests default styling will be removed
+// Remove list styles on ul, ol with role="list"
 ul[role="list"],
 ol[role="list"] {
   list-style: none;
 }
 
-// Make media easier to work with
+// Default styles for unclassed a elements
+a:not([class]) {
+  text-decoration-skip-ink: auto;
+  color: currentColor;
+}
+
+// Make images easier to work with
 img,
 picture,
 iframe,
@@ -56,28 +51,16 @@ input,
 button,
 textarea,
 select {
-  font-family: inherit;
-  font-size: inherit;
+  font: inherit;
 }
 
-// Make sure textareas without a rows attribute are not tiny
+// Ensure textareas without rows are not tiny
 textarea:not([rows]) {
   min-block-size: 10em;
   resize: none;
 }
 
-// A elements that don't have a class get default styles
-a:not([class]) {
-  text-decoration-skip-ink: auto;
-  color: currentColor;
-}
-
-// Anything that has been anchored to should have extra scroll margin
-// :target {
-//   scroll-margin-block: 5ex;
-// }
-
-// Remove all animations and transitions for people that prefer not to see them
+// Remove animations for prefers-reduced-motion
 @media (prefers-reduced-motion: reduce) {
   html:focus-within {
     scroll-behavior: auto;

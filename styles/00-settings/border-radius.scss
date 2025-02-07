@@ -1,0 +1,26 @@
+$token: (
+  "title": "Border Radius",
+  "description": "Defines the border radius values used in the project.",
+  "items": (
+    (
+      // Standard border radius for general use
+      "name": "Base",
+      "value": 0.5rem
+    ),
+    (
+      // Small border radius for subtle rounding
+      "name": "S",
+      "value": 0.35rem
+    ),
+    // (
+    //   // Large border radius for significant rounding
+    //   "name": "L",
+    //   "value": 1rem
+    // ),
+    // (
+    //   // Extra large border radius for significant rounding
+    //   "name": "XL",
+    //   "value": 2rem
+    // ),,,
+  ),
+);

@@ -1,12 +1,16 @@
 /*
  * SPECBOOST
  * An id that increases the specificity of a CSS selector.
- * This technique can be used to override styles from a more specific selector.
+ * This technique can be used to override styles from a more
+ * specific selector.
  * 
  * USAGE AND CONFIGURATION
- * Use the :is() pseudo-class with the #specBoost id to increase specificity.
+ * Use the :is() pseudo-class with the #specBoost id to increase
+ * specificity.
  * Example: :is(p, #specBoost) { ... }
  * 
- * Note: This technique should be used sparingly, as it can make your CSS more complex and harder to maintain.
- * Always try to increase specificity through proper structuring of your CSS and HTML first.
+ * Note: This technique should be used sparingly, as it can make
+ * your CSS more complex and harder to maintain.
+ * Always try to increase specificity through proper structuring
+ * of your CSS and HTML first.
  */

@@ -1,90 +1,130 @@
-// @use "../10-functions/theme-accessor" as *;
-
 .button {
-  --button-x-padding: 2.5em;
-  --button-y-padding: 1.3em;
-  // --button-border-color: #{get(color, grayish-dark-blue)};
+  // Noth: Both values below required for icon button sizing
+  // Note: border-width must be set in [data-button="icon"]
+  --button-font-size: var(--font-size-meta);
+  --button-line-height: var(--line-height-fine);
 
+  /* Layout and spacing */
   display: inline-flex;
   align-items: center;
-  justify-content: center;
-  gap: 0ch;
+  justify-content: space-between;
   position: relative;
-  padding: var(--button-padding, 0);
-  cursor: pointer;
+  padding-block: var(--button-y-padding);
+  padding-inline: var(--button-x-padding);
+  inline-size: var(--button-inline-size, auto);
+  gap: 3ch;
+
+  /* Colours */
+  background: var(--button-bg);
+  color: var(--button-color);
+
+  /* Stroke and radius */
+  border: var(--border);
+  border-color: var(--border-color, transparent);
+  border-radius: var(--button-border-radius);
+
+  /* Typography */
+  font-size: var(--button-font-size);
+  font-family: sans-serif;
+  font-weight: var(--font-weight-medium);
+  line-height: var(--button-line-height);
   text-decoration: none;
-  border: var(
-    --button-border,
-    solid var(--border-width, medium) var(--button-border-color, transparent)
-  );
-  border-radius: var(--button-radius, 0em);
-  font-size: get(font-size, -2);
-  font-family: get(font-family, base);
-  // font-weight: get(font-weight, semi-bold);
-  line-height: get(line-height, flat);
-  letter-spacing: get(letter-spacing, extra-loose);
-  text-transform: uppercase;
-  background-color: var(--button-bg, transparent);
-  // color: var(--button-text, get(color, grayish-dark-blue));
-  min-inline-size: fit-content;
 
-  & span {
-    padding: var(--button-y-padding) var(--button-x-padding);
-    display: flex;
+  /* Icon settings */
+  svg {
+    max-block-size: 1em;
+    max-inline-size: 1em;
+    transition: transform 0.2s linear;
+    transform: rotate(0deg);
   }
 
-  &:hover,
-  &:focus-visible {
-    & span {
-      // background-color: get(color, grayish-dark-blue);
-      // background-color: var(--button-bg, #{get(color, grayish-dark-blue)});
-      // color: get(color, very-light-grey);
-    }
+  /* Interactive */
+  cursor: pointer;
 
-    & svg {
-      // background-color: get(background-color, almost-black);
+  /* States */
+  &:hover:not(:disabled) {
+    background-color: var(--button-bg-hover);
+  }
+
+  &:disabled {
+    background-color: var(--button-bg-disabled, #8b8b8d);
+    color: var(--button-color-disabled, #fcfcfc);
+    cursor: default;
+  }
+
+  /* Variants */
+  &[data-button] {
+    --button-y-padding: 0.75em;
+    --button-x-padding: 1.1em;
+    --button-border-radius: var(--border-radius-s);
+  }
+
+  &[data-button="primary"] {
+    --button-bg: #18181b;
+    --button-color: #fafafa;
+
+    &:hover:not(:disabled) {
+      --button-bg-hover: #2f2f31;
     }
   }
 
-  /* Default variant is primary, so no additional styles needed for it */
-  /* VARIANTS */
-  &[data-button-variant="secondary"] {
-    & span {
-      padding-inline-end: var(--button-x-padding);
-      padding-inline-start: calc(var(--button-x-padding) * 3.5);
-    }
+  &[data-button="secondary"] {
+    --button-bg: #f4f4f5;
+    --button-color: #18181b;
 
-    & svg {
+    &:hover:not(:disabled) {
+      --button-bg-hover: #f6f6f7;
+    }
+  }
+
+  &[data-button="outline"] {
+    --button-bg: #ffffff;
+    --button-color: #09090b;
+    --border-color: #e4e4e7;
+
+    &:hover:not(:disabled) {
+      --button-bg-hover: #f4f4f5;
+    }
+  }
+
+  &[data-button="ghost"] {
+    --button-bg: #ffffff;
+    --button-color: #09090b;
+
+    &:hover:not(:disabled) {
+      --button-bg-hover: #f4f4f5;
+    }
+  }
+
+  &[data-button="link"] {
+    --button-bg: #ffffff;
+    --button-color: #09090b;
+    text-underline-offset: 0.2em;
+
+    &:hover:not(:disabled) {
+      text-decoration: underline;
+    }
+  }
+
+  &[data-button="icon"] {
+    --button-bg: #ffffff;
+    --button-color: #09090b;
+    --border-color: #e4e4e7;
+
+    --_padding-y: calc(var(--button-y-padding) * 2);
+    --_content: calc(var(--button-font-size) * var(--button-line-height));
+    --_border: 2px;
+    block-size: calc(var(--_padding-y) + var(--_content) + var(--_border));
+    aspect-ratio: 1;
+
+    svg {
       position: absolute;
-      inset-inline-start: 0;
-    }
-  }
-
-  &[data-button-variant="special"] {
-    // background-color: get(color, dark-blue);
-    // color: get(color, very-light-grey);
-
-    & span:has(svg) {
-      color: #5fb4a2;
-      background-color: #1d3444;
-      padding: var(--button-y-padding) calc(var(--button-x-padding) / 1.75);
+      inset: 50%;
+      transform: translate(-50%, -50%);
     }
 
-    & svg {
-      block-size: 1em;
-      inline-size: 2ch;
-    }
-
-    // Hover styles
-    &:hover,
-    &:focus-visible {
-      --button-bg: #5fb4a2;
-      --button-border-color: #55a292;
-
-      & span:has(svg) {
-        // color: get(color, very-light-grey);
-        background-color: #55a292;
-      }
+    &:hover:not(:disabled) {
+      --button-bg-hover: #f4f4f5;
     }
   }
 }

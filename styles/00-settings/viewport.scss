@@ -1,49 +1,32 @@
 /*
  * FILE: viewport.scss
  *
- * This file defines viewport widths for fluid type, spacing scales, and 
- * breakpoints for responsive design.
+ * This file defines viewport widths for fluid type and spacing scales.
  *
  * The `items` map includes:
- *  - Viewport size name (e.g., "min", "mid", "lrg", "max")
+ *  - Viewport size name (e.g., "min", "max")
  *  - Corresponding value in rem for each viewport size
  *
  * The `min` and `max` values are imperative for generating fluid type and 
- * spacing scales. The `mid` and `lrg` values are used to set responsive 
- * breakpoints.
+ * spacing scales.
  *
- * All values are defined in rem. If one wishes to define values in px, the 
- * adjustment should be made in the `processClamp` function in the 
- * `10-functions/process-clamp.scss` file.
- *
- * Additionally, the unit would need to be changed in the `media-query` mixin 
- * located in the `20-mixins/media-query.scss` file.
+ * All values are defined in rem. If you wish to define values in px, adjust 
+ * the `$unit-type` variable in the `00-settings/_theme-config.scss` file accordingly.
  */
 
 $token: (
   "title": "Viewport",
-  "description":
-    "Defines viewport widths for fluid type, spacing scales, and breakpoints for responsive design.",
+  "description": "Defines viewport widths for fluid type and spacing scales.",
   "items": (
     (
-      "name": "min",
-      "value": 20,
       // 320px - Critical for fluid typography
+      "name": "min",
+      "value": 20
     ),
     (
-      "name": "mid",
-      "value": 37.5,
-      // 600px - Used for tablet breakpoint
-    ),
-    (
-      "name": "lrg",
-      "value": 50,
-      // 800px - Used for desktop breakpoint
-    ),
-    (
+      // 1920px - Critical for fluid typography and widescreen layouts
       "name": "max",
-      "value": 80,
-      // 1280px - Critical for fluid typography and widescreen layouts
+      "value": 120
     ),
   ),
 );

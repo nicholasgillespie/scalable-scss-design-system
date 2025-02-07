@@ -6,7 +6,7 @@
  * CUSTOM PROPERTIES AND CONFIGURATION
  * --grid-placement: How many columns to create in the grid.
  * --grid-item-size-min: The minimum size of grid items.
- * --space-grid: The space between grid items.
+ * --grid-space: The space between grid items.
  * 
  * A data attribute [data-grid="halves"] can be used to create a 50/50 split
  * layout.
@@ -16,20 +16,20 @@
  * that inherits the row and column sizes from its parent grid.
  * --subgrid-rows: The number of rows a subgrid item should span.
  * --subgrid-columns: The number of columns a subgrid item should span.
- * --space-subgrid: The space between subgrid items.
+ * --subgrid-space: The space between subgrid items.
+ *   
+ * Additional Resources:
+ * https://daverupert.com/2022/07/solving-the-dangler-conundrum-with-has-and-container-queries/
+ * https://www.youtube.com/watch?v=Zddz_R1RnfM
  */
 
-@use "../00-settings/theme-config" as *;
-$prefix: map-get($class-type-prefixes, layouts);
-
-.#{$prefix}grid {
-  // https://daverupert.com/2022/07/solving-the-dangler-conundrum-with-has-and-container-queries/
+.grid {
   display: grid;
   grid-template-columns: repeat(
     var(--grid-placement, auto-fill),
     minmax(min(var(--grid-item-size-min, 16rem), 100%), 1fr)
   );
-  gap: var(--space-grid, var(--space-gutter));
+  gap: var(--grid-space, var(--gutter));
   container-type: inline-size;
 
   &[data-grid="halves"] {
@@ -42,13 +42,13 @@ $prefix: map-get($class-type-prefixes, layouts);
     --grid-item-size-min: clamp(16rem, 33%, 20rem);
   }
 
-  @supports (grid-template-rows: subgrid) {
-    &[data-grid="subgrid"] > * {
-      display: grid;
-      grid-template-rows: subgrid;
-      grid-row: span var(--subgrid-rows, 3);
-      grid-column: span var(--subgrid-columns, 1);
-      gap: var(--space-subgrid, var(--space-gutter));
-    }
-  }
+  // @supports (grid-template-rows: subgrid) {
+  //   &[data-grid="subgrid"] > * {
+  //     display: grid;
+  //     grid-template-rows: subgrid;
+  //     grid-row: span var(--subgrid-rows, 3);
+  //     grid-column: span var(--subgrid-columns, 1);
+  //     gap: var(--space-subgrid, var(--gutter));
+  //   }
+  // }
 }

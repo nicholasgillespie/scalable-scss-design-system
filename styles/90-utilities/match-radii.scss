@@ -9,12 +9,9 @@
  * --match-radii-inner-radius: Defines the border radius of the child elements.
  */
 
-@use "../00-settings/theme-config" as *;
-$prefix: map-get($class-type-prefixes, utilities);
-
-.#{$prefix}match-radii {
-  --match-radii-space: var(--box-space, 8px);
-  --match-radii-inner-radius: var(--box-border-radius, 12px);
+.match-radii {
+  --match-radii-space: var(--box-space, var(--space-gutter));
+  --match-radii-inner-radius: var(--box-border-radius, var(--border-radius));
 
   padding: var(--match-radii-space);
   border-radius: calc(

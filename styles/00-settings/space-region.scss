@@ -2,47 +2,47 @@
  * FILE: space-region.scss
  *
  * This file defines the region sizes used in the project, including specific 
- * values for different spacing elements (e.g., "Small", "Base", "Large").
+ * values for different spacing elements (e.g., "Base", "S", "L").
  *
  * The `items` map includes:
- *  - Region size name (e.g., "Small", "Base", "Large")
+ *  - Region size name (e.g., "Base", "S", "L")
  *  - Corresponding value retrieved using the `get` function
  *
- * Region sizes are retrieved from the `spacing` file using the `get` 
+ * Region sizes are retrieved from the `scale-space` file using the `get` 
  * function, which utilizes the `retrieveVariables` function to fetch CSS 
  * variables.
  */
 
-// Import design tokens
-@use "./spacing.scss" as spacing;
-
-// Import helper functions
-@use "../10-functions/helpers/retrieve-value" as help-rtv;
+// Import design tokens and helper functions
+@use "./scale-space.scss" as scale-space;
+@use "../10-functions/helpers/retrieve-value.scss" as help-rtv;
 
 // Retrieve a CSS variable from the token by key.
 @function get($key: null) {
   @return help-rtv.tokenCssVariable(
     $key,
-    spacing.$token,
+    scale-space.$token,
     $token-prefix: "space"
   );
 }
 
 $token: (
   "title": "Space Region",
-  "description": "Defines region size values used in the project.",
   "items": (
     (
+      // Small space region for narrow spacing
       "name": "Base",
-      "value": get(xl-2xl),
+      "value": get("xl")
     ),
     // (
-    //   "name": "S",
-    //   "value": get(s),
+    //   // Large space region for wider spacing
+    //   "name": "L",
+    //   "value": get("2xl-3xl")
     // ),
     // (
-    //   "name": "L",
-    //   "value": get(l),
-    // ),,
+    //   // Extrq-large space region for the widest spacing
+    //   "name": "XL",
+    //   "value": get("3xl-4xl")
+    // ),,,
   ),
 );

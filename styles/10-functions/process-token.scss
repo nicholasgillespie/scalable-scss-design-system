@@ -20,15 +20,18 @@
  */
 
 // Import design tokens
-@use "../00-settings/color-palette" as color-palette;
+@use "../00-settings/color-palette.scss" as color-palette;
 
-// Import helper functions
-@use "./helpers/handle-string" as help-str;
+// Import Sass modules and helper functions
+@use "sass:map";
+@use "sass:meta";
+@use "sass:list";
+@use "./helpers/handle-string.scss" as help-str;
 
 // Define exceptions for skipping key segments
 $exception-skip-keys: (
   (
-    "title": map-get(color-palette.$token, "title"),
+    "title": map.get(color-palette.$token, "title"),
     "skip": 1,
   )
 );
@@ -43,8 +46,8 @@ $exception-skip-keys: (
  */
 @function processToken($token: null) {
   // Retrieve 'items' and 'title' from the token
-  $items: map-get($token, "items");
-  $title: map-get($token, "title");
+  $items: map.get($token, "items");
+  $title: map.get($token, "title");
 
   // Format items into key/value pairs
   $items: formatItems($items, $title);
@@ -68,73 +71,79 @@ $exception-skip-keys: (
   $skip: 0;
 
   // Retrieve the number of key segments to skip
-  @if type-of($exception-skip-keys) == "map" {
-    @if map-get($exception-skip-keys, "title") == $title {
-      $skip: map-get($exception-skip-keys, "skip");
-    }
-  } @else if type-of($exception-skip-keys) == "list" {
-    @each $exception in $exception-skip-keys {
-      @if map-get($exception, "title") == $title {
-        $skip: map-get($exception, "skip");
+  @if meta.variable-exists(exception-skip-keys) {
+    @if meta.type-of($exception-skip-keys) == "map" {
+      @if map.get($exception-skip-keys, "title") == $title {
+        $skip: map.get($exception-skip-keys, "skip");
+      }
+    } @else if meta.type-of($exception-skip-keys) == "list" {
+      @each $exception in $exception-skip-keys {
+        @if map.get($exception, "title") == $title {
+          $skip: map.get($exception, "skip");
+        }
       }
     }
   }
 
-  @if type-of($items) == "list" {
+  @if meta.type-of($items) == "list" {
     // Lists: Use for multiple values that are not key-value pairs.
     @each $item in $items {
-      $keys: map-keys($item);
+      $keys: map.keys($item);
 
-      @if length($keys) == 1 {
+      @if list.length($keys) == 1 {
         // Simple Key-Value Pairs: Use for single values.
-        $key: nth($keys, 1);
-        $value: map-get($item, $key);
-        $result: map-merge($result, processSimpleKeyValue($key, $value));
-      } @else if length($keys) == 2 {
-        $name-key: nth($keys, 1);
-        $value-key: nth($keys, 2);
-        $name-key-value: map-get($item, $name-key);
+        $key: list.nth($keys, 1);
+        $value: map.get($item, $key);
+        $result: map.merge($result, processSimpleKeyValue($key, $value));
+      } @else if list.length($keys) == 2 {
+        $name-key: list.nth($keys, 1);
+        $value-key: list.nth($keys, 2);
+        $name-key-value: map.get($item, $name-key);
 
-        @if type-of(map-get($item, $value-key)) == "map" {
+        @if meta.type-of(map.get($item, $value-key)) == "map" {
           // Multi-Level Nested Key-Value Pairs: Use for deeply nested structures.
           $sub-result: processMultiLevelNestedKeyValue(
-            map-get($item, $value-key),
+            map.get($item, $value-key),
             $title,
-            append($parent-keys, $name-key-value)
+            list.append($parent-keys, $name-key-value)
           );
-          $result: map-merge($result, $sub-result);
+          $result: map.merge($result, $sub-result);
         } @else {
           // Nested Key-Value Pairs: Use for complex structures.
-          $result: map-merge(
+          $result: map.merge(
             $result,
-            processNestedKeyValue($name-key-value, map-get($item, $value-key))
+            processNestedKeyValue($name-key-value, map.get($item, $value-key))
           );
         }
       }
     }
-  } @else if type-of($items) == "map" {
-    $keys: map-keys($items);
+  } @else if meta.type-of($items) == "map" {
+    $keys: map.keys($items);
 
     @each $key in $keys {
-      $value: map-get($items, $key);
+      $value: map.get($items, $key);
 
-      @if type-of($value) == "map" {
+      @if meta.type-of($value) == "map" {
         // Multi-Level Nested Key-Value Pairs: Use for deeply nested structures.
         $sub-result: processMultiLevelNestedKeyValue(
           $value,
           $title,
-          append($parent-keys, $key)
+          list.append($parent-keys, $key)
         );
-        $result: map-merge($result, $sub-result);
+        $result: map.merge($result, $sub-result);
       } @else {
-        $nested-key: join($parent-keys, $key, comma);
+        $nested-key: list.join($parent-keys, $key, comma);
         $delimiter: ", ";
         $nested-key: help-str.listToString($nested-key, $delimiter);
-        $nested-key: help-str.stringTrimAfter($nested-key, $delimiter, $skip);
+        $nested-key: help-str.trimStringAfterDelimiter(
+          $nested-key,
+          $delimiter,
+          $skip
+        );
         $nested-key: help-str.stringReplace($nested-key, $delimiter, " ");
 
         // Simple Key-Value Pairs: Use for single values.
-        $result: map-merge($result, processSimpleKeyValue($nested-key, $value));
+        $result: map.merge($result, processSimpleKeyValue($nested-key, $value));
       }
     }
   }
@@ -152,6 +161,7 @@ $exception-skip-keys: (
  */
 @function processSimpleKeyValue($key, $value) {
   $key: help-str.slugify($key);
+  $key: help-str.stringReplace($key, "--", "-");
   @return ($key: $value);
 }
 
@@ -183,7 +193,7 @@ $exception-skip-keys: (
 
   @each $sub-key, $sub-value in $sub-result {
     $sub-key: help-str.slugify($sub-key);
-    $result: map-merge(
+    $result: map.merge(
       $result,
       (
         $sub-key: $sub-value,

@@ -1,0 +1,31 @@
+$token: (
+  "title": "Border",
+  "description": "Defines the border styles used in the project.",
+  "items": (
+    (
+      // Standard border style for general use
+      "name": "Base",
+      "value": 1px solid transparent
+    ),
+    // (
+    //   // Thin border style for subtle borders
+    //   "name": "Thin",
+    //   "value": 1px solid transparent
+    // ),
+    // (
+    //   // Thick border style for moderate borders
+    //   "name": "Thick",
+    //   "value": 2px solid transparent
+    // ),
+    // (
+    //   // Thicker border style for significant borders
+    //   "name": "Thicker",
+    //   "value": 3px solid transparent
+    // ),
+    // (
+    //   // Thickest border style for prominent borders
+    //   "name": "Thickest",
+    //   "value": 4px solid transparent
+    // ),,
+  ),
+);

@@ -1,5 +1,5 @@
 /*
- * FILE: step-size.scss
+ * FILE: scale-step.scss
  *
  * This file defines the step sizes used in the project with min and max values 
  * for responsive scaling. These steps are used to calculate the actual font sizes.
@@ -21,53 +21,56 @@
  */
 
 $token: (
-  "title": "Step Size",
-  "description":
-    "Defines step sizes with min and max values for responsive scaling.",
+  "title": "Scale Step",
   "meta": (
     "scaleGenerator":
-      "https://utopia.fyi/type/calculator?c=320,18,1.2,800,20,1.25,5,2,&s=0.75|0.5|0.25,1.5|2|3|4|6,s-l&g=s,l,xl,12",
+      "https://utopia.fyi/type/calculator/?c=320,16,1.125,1240,18,1.25,6,2,&s=0.75|0.5|0.25,1.5|2|3|4|6|8|10,s-l&g=s,l,xl,12",
   ),
   "items": (
     (
       "name": "-2",
-      "min": 12.5,
-      "max": 12.8,
+      "min": 12.64,
+      "max": 11.52,
     ),
     (
       "name": "-1",
-      "min": 15,
-      "max": 16,
+      "min": 14.22,
+      "max": 14.4,
     ),
     (
-      "name": "0",
-      "min": 18,
-      "max": 20,
+      "name": "Base",
+      "min": 16,
+      "max": 18,
     ),
     (
       "name": "1",
-      "min": 21.6,
-      "max": 25,
+      "min": 18,
+      "max": 22.5,
     ),
     (
       "name": "2",
-      "min": 25.92,
-      "max": 31.25,
+      "min": 20.25,
+      "max": 28.13,
     ),
     (
       "name": "3",
-      "min": 31.1,
-      "max": 39.06,
+      "min": 22.78,
+      "max": 35.16,
     ),
     (
       "name": "4",
-      "min": 37.32,
-      "max": 48.83,
+      "min": 25.63,
+      "max": 43.95,
     ),
     (
       "name": "5",
-      "min": 44.79,
-      "max": 61.04,
+      "min": 28.83,
+      "max": 54.93,
+    ),
+    (
+      "name": "6",
+      "min": 32.44,
+      "max": 68.66,
     ),
   ),
 );

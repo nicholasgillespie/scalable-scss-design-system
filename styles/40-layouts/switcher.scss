@@ -5,7 +5,7 @@
  * Info: https://every-layout.dev/layouts/switcher/
  * 
  * CUSTOM PROPERTIES AND CONFIGURATION
- * --space-switcher: The space between each item.
+ * --switcher-space: The space between each item.
  * --switcher-content-alignment: How items should distribute in the vertical
  * space when there is extra space in the cross-axis.
  * --switcher-vertical-alignment: How items should align horizontally.
@@ -15,19 +15,16 @@
  * items full width after the second item.
  */
 
-@use "../00-settings/theme-config" as *;
-$prefix: map-get($class-type-prefixes, layouts);
-
-.#{$prefix}switcher {
+.switcher {
   display: flex;
   flex-wrap: wrap;
   align-content: var(--switcher-content-alignment, flex-start);
   align-items: var(--switcher-vertical-alignment, flex-start);
-  gap: var(--space-switcher, var(--space-gutter));
+  gap: var(--switcher-space, var(--space-gutter));
 
   & > * {
     flex-grow: 1;
-    flex-basis: calc((var(--switcher-item-target-width, 30rem) - 100%) * 999);
+    flex-basis: calc((var(--switcher-item-target-width, 32rem) - 100%) * 999);
   }
 
   &[data-switcher="full-width-from-third"] {

@@ -1,0 +1,25 @@
+$token: (
+  "title": "Transition",
+  "items": (
+    (
+      // Standard transition for general use
+      "name": "Base",
+      "value": 250ms ease
+    ),
+    (
+      // Transition for movement animations
+      "name": "Movement",
+      "value": 200ms linear
+    ),
+    (
+      // Transition for fade effects
+      "name": "Fade",
+      "value": 300ms ease
+    ),
+    (
+      // Transition for bounce effects
+      "name": "Bounce",
+      "value": 500ms cubic-bezier(0.5, 0.05, 0.2, 1.5)
+    ),
+  ),
+);

@@ -1,16 +1,26 @@
-@use "../00-settings/theme-config" as *;
-$prefix: map-get($class-type-prefixes, utilities);
+/*
+ * TEXT ALIGN
+ * A utility that sets the text alignment of an element using logical properties.
+ */
 
-.#{$prefix}text-align {
-  &-center {
-    text-align: center;
-  }
-
+.text {
   &-start {
     text-align: start;
   }
 
   &-end {
     text-align: end;
+  }
+
+  &-center {
+    text-align: center;
+  }
+
+  &-justify {
+    text-align: justify;
+  }
+
+  &-match-parent {
+    text-align: match-parent;
   }
 }

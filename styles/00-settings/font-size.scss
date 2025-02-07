@@ -1,68 +1,74 @@
 /*
  * FILE: font-size.scss
  *
- * This file defines the text sizes used in the project, including specific 
+ * This file defines the font sizes used in the project, including specific 
  * values for different text elements (e.g., "Base", "Heading 1").
  *
  * The `items` map includes:
- *  - Text size name (e.g., "Base", "Heading 1")
+ *  - Font size name (e.g., "Base", "Heading 1")
  *  - Corresponding value retrieved using the `get` function
  *
- * Text sizes are retrieved from the `step-size.scss` file using the `get` 
+ * Font sizes are retrieved from the `scale-step.scss` file using the `get` 
  * function, which utilizes the `retrieveVariables` function to fetch CSS 
  * variables.
  */
 
-// Import design tokens
-@use "./step-size.scss" as step-size;
-
-// Import helper functions
-@use "../10-functions/helpers/retrieve-value" as help-rtv;
+// Import design tokens and helper functions
+@use "./scale-step.scss" as scale-step;
+@use "../10-functions/helpers/retrieve-value.scss" as help-rtv;
 
 // Retrieve a CSS variable from the token by key.
 @function get($key: null) {
   @return help-rtv.tokenCssVariable(
     $key,
-    step-size.$token,
+    scale-step.$token,
     $token-prefix: "step-size"
   );
 }
 
 $token: (
   "title": "Font Size",
-  "description": "Defines text size values used in the project.",
+  "description": "Defines font size values used in the project.",
   "items": (
     (
+      // Standard font size for body content
       "name": "Base",
-      "value": get(0),
-    ),
-    // (
-    //   "name": "Lede",
-    //   "value": get(1),
-    // ),
-    // (
-    //   "name": "Meta",
-    //   "value": get(-1),
-    // ),
-    (
-        "name": "Heading 1",
-        "value": get(5),
-      ),
-    (
-      "name": "Heading 2",
-      "value": get(4),
+      "value": get(base)
     ),
     (
-      "name": "Heading 3",
-      "value": get(3),
+      // Slightly larger font for introductory paragraphs or ledes
+      "name": "Lede",
+      "value": get(1)
     ),
     (
+      // Smaller font for metadata or fine print
+      "name": "Meta",
+      "value": get(-1)
+    ),
+    (
+      // Smallest heading size for minor titles
       "name": "Heading 4",
-      "value": get(2),
+      "value": get(2)
+    ),
+    (
+      // Medium heading size for sub-section titles
+      "name": "Heading 3",
+      "value": get(3)
+    ),
+    (
+      // Second largest heading size for section titles
+      "name": "Heading 2",
+      "value": get(4)
+    ),
+    (
+      // Largest heading size for main titles
+      "name": "Heading 1",
+      "value": get(5)
     ),
     // (
-    //   "name": "Prose",
-    //   "value": get(0),
-    // ),,,,,,,,,
+    //   // Largest heading size for main titles
+    //   "name": "Display",
+    //   "value": get(6)
+    // ),
   ),
 );

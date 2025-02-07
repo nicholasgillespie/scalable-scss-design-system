@@ -3,6 +3,8 @@
 // @use "./20-mixins" as *;
 @use "./30-base" as *;
 @use "./40-layouts" as *;
-// @use "./50-core-components" as *;
-// @use "./80-templates" as *;
+@use "./50-core-components" as *;
+@use "./60-enhanced-components" as *;
+@use "./70-third-party-plugins" as *;
+@use "./80-page-specific" as *;
 @use "./90-utilities" as *;

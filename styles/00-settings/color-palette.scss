@@ -17,24 +17,26 @@ $token: (
   "description": "Centralizes all project colors. Accepts all color formats.",
   "items": (
     (
+      // Core colors used for primary and secondary elements
       "name": "Core",
       "value": (
-        "Primary": #7552c7,
+        "Primary": #6427f4,
         "Secondary": #8aac39,
-      ),
+      )
     ),
     (
+      // Shades of gray used for backgrounds, borders, and text
       "name": "Shades",
       "value": (
-        "Dark": #000000,
+        "Dark": #09090b,
         "Dim": #242424,
         "Charcoal": #494949,
         "Gray": #6d6d6d,
         "Gray Bright": #929292,
         "Gray Glare": #b6b6b6,
         "Light": #dbdbdb,
-        "Light Bright": #ffffff,
-      ),
+        "Light Bright": #fafafa,
+      )
     ),
   ),
 );

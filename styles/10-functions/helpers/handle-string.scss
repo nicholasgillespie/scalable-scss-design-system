@@ -1,16 +1,21 @@
+// Import Sass modules and helper functions
+@use "sass:list";
+@use "sass:string";
+@use "sass:meta";
+
 /**
- * Function: abbreviate
+ * Function: initialsFromWords
  * Creates an abbreviation from a string by taking the first letter of each
  * word.
  *
  * @param {String} $string - The string to abbreviate.
  * @return {String} - The resulting abbreviation.
  */
-@function abbreviate($string) {
+@function initialsFromWords($string) {
   $abbreviation: "";
   $words: stringToList($string, "-");
   @each $word in $words {
-    $abbreviation: $abbreviation + str-slice($word, 1, 1);
+    $abbreviation: $abbreviation + string.slice($word, 1, 1);
   }
   @return $abbreviation;
 }
@@ -28,7 +33,11 @@
   @each $item in $list {
     $result: $result + $item + $delimiter;
   }
-  $result: str-slice($result, 1, str-length($result) - str-length($delimiter));
+  $result: string.slice(
+    $result,
+    1,
+    string.length($result) - string.length($delimiter)
+  );
   @return $result;
 }
 
@@ -47,14 +56,14 @@
 
   $result: "";
 
-  @for $i from 1 through str-length($string) {
-    $char: str-slice($string, $i, $i);
-    @if not str-index($disallowed, $char) {
+  @for $i from 1 through string.length($string) {
+    $char: string.slice($string, $i, $i);
+    @if not string.index($disallowed, $char) {
       $result: $result + $char;
     }
   }
 
-  @return to-lower-case(stringReplace($result, " ", "-"));
+  @return string.to-lower-case(stringReplace($result, " ", "-"));
 }
 
 /**
@@ -68,12 +77,12 @@
  * @return {String} - The resulting string.
  */
 @function stringReplace($string, $search, $replace: "") {
-  $index: str-index($string, $search);
+  $index: string.index($string, $search);
 
   @if $index {
-    @return str-slice($string, 1, $index - 1) + $replace +
+    @return string.slice($string, 1, $index - 1) + $replace +
       stringReplace(
-        str-slice($string, $index + str-length($search)),
+        string.slice($string, $index + string.length($search)),
         $search,
         $replace
       );
@@ -91,22 +100,22 @@
  * @return {List} - The resulting list.
  */
 @function stringToList($string, $delimiter) {
-  $index: str-index($string, $delimiter);
+  $index: string.index($string, $delimiter);
   $result: ();
 
   @while $index {
-    $part: str-slice($string, 1, $index - 1);
-    $result: append($result, $part);
-    $string: str-slice($string, $index + str-length($delimiter));
-    $index: str-index($string, $delimiter);
+    $part: string.slice($string, 1, $index - 1);
+    $result: list.append($result, $part);
+    $string: string.slice($string, $index + string.length($delimiter));
+    $index: string.index($string, $delimiter);
   }
 
-  $result: append($result, $string);
+  $result: list.append($result, $string);
   @return $result;
 }
 
 /**
- * Function: stringTrimAfter
+ * Function: trimStringAfterDelimiter
  * Trims a string after a specified delimiter and count, returning the
  * remaining part.
  *
@@ -115,9 +124,13 @@
  * @param {Number} $count - The number of occurrences to keep before trimming.
  * @return {String} - The resulting trimmed string.
  */
-@function stringTrimAfter($string, $delimiter, $count) {
-  $parts: stringToList($string, $delimiter);
-  $numParts: length($parts);
+@function trimStringAfterDelimiter($string, $delimiter, $count) {
+  @if meta.type-of($string) == "list" {
+    $string: list.join($string, $delimiter);
+  }
+
+  $parts: string.split($string, $delimiter);
+  $numParts: list.length($parts);
 
   @if $numParts <= $count {
     @return "";
@@ -126,9 +139,9 @@
   $result: "";
   @for $i from $count + 1 through $numParts {
     @if $result == "" {
-      $result: nth($parts, $i);
+      $result: list.nth($parts, $i);
     } @else {
-      $result: $result + $delimiter + nth($parts, $i);
+      $result: $result + $delimiter + list.nth($parts, $i);
     }
   }
 

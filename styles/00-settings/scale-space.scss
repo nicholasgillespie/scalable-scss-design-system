@@ -1,0 +1,109 @@
+/*
+ * FILE: scale-space.scss
+ *
+ * This file defines the spacing sizes used in the project with min and max 
+ * values for responsive scaling.
+ *
+ * The `items` map includes:
+ *  - Spacing size name (e.g., "S", "M", "L")
+ *  - Corresponding min and max values for responsive scaling
+ *
+ * All values are defined in pixels. The conversion to `px` or `rem` is handled 
+ * by the `processClamp` function in the `10-functions/process-clamp.scss` file.
+ *
+ * For each value, a min and max are defined, and the size adjusts based on the 
+ * viewport width.
+ *
+ * The following settings are defined in the `process-clamp.scss` file:
+ *  - `unit-type`: Defines the unit type for the spacing values (e.g., "px", "rem").
+ *  - `relative-unit-type`: Defines the relative unit type for viewport-based 
+ *    scaling (e.g., "vw", "vi").
+ */
+
+$token: (
+  "title": "Scale Space",
+  "meta": (
+    "scaleGenerator":
+      "https://utopia.fyi/space/calculator/?c=320,16,1.2,1920,18,1.25,5,2,&s=0.75|0.5|0.25,1.5|2|3|4|6|8|10,s-l&g=s,l,xl,12",
+  ),
+  "items": (
+    // space values - individual
+    (
+        "name": "3XS",
+        "min": 4,
+        "max": 5,
+      ),
+    (
+      "name": "2XS",
+      "min": 8,
+      "max": 9,
+    ),
+    (
+      "name": "XS",
+      "min": 12,
+      "max": 14,
+    ),
+    (
+      "name": "S",
+      "min": 16,
+      "max": 18,
+    ),
+    (
+      "name": "M",
+      "min": 24,
+      "max": 27,
+    ),
+    (
+      "name": "L",
+      "min": 32,
+      "max": 36,
+    ),
+    (
+      "name": "XL",
+      "min": 48,
+      "max": 54,
+    ),
+    (
+      "name": "2XL",
+      "min": 64,
+      "max": 72,
+    ),
+    (
+      "name": "3XL",
+      "min": 96,
+      "max": 108,
+    ),
+    (
+      "name": "4XL",
+      "min": 128,
+      "max": 144,
+    ),
+    (
+      "name": "5XL",
+      "min": 160,
+      "max": 180,
+    ),
+    // space value pairs - single steps
+    // (
+    //     "name": "XL-2XL",
+    //     "min": 48,
+    //     "max": 72,
+    //   ),
+    // (
+    //   "name": "2XL-3XL",
+    //   "min": 64,
+    //   "max": 108,
+    // ),
+    // (
+    //   "name": "3XL-4XL",
+    //   "min": 96,
+    //   "max": 144,
+    // ),
+    // (
+    //   "name": "4XL-5XL",
+    //   "min": 128,
+    //   "max": 180,
+    // ),
+    // space value pairs - custom steps,,,
+  ),
+);

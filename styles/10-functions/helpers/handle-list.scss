@@ -1,3 +1,6 @@
+// Import Sass modules
+@use "sass:list";
+
 /**
  * Function: prefixItems
  * Prefixes each key in the list with the specified prefix.
@@ -9,7 +12,7 @@
 @function prefixItems($prefix, $keys) {
   $result: ();
   @each $key in $keys {
-    $result: append($result, $prefix + $key);
+    $result: list.append($result, $prefix + $key);
   }
   @return $result;
 }
@@ -24,8 +27,8 @@
 @function unique($list) {
   $uniqueList: ();
   @each $item in $list {
-    @if not index($uniqueList, $item) {
-      $uniqueList: append($uniqueList, $item, comma);
+    @if not list.index($uniqueList, $item) {
+      $uniqueList: list.append($uniqueList, $item, comma);
     }
   }
   @return $uniqueList;

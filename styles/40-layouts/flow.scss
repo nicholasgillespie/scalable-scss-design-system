@@ -11,12 +11,9 @@
  * items.
  */
 
-@use "../00-settings/theme-config" as *;
-$prefix: map-get($class-type-prefixes, layouts);
-
-.#{$prefix}flow > * {
+.flow > * {
   & + * {
-    margin-block-start: var(--space-flow, 1em);
+    margin-block-start: var(--flow-space, 1em);
   }
 
   &[data-flow="none"] {

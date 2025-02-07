@@ -1,228 +1,306 @@
-@use "../10-functions/theme-accessor" as *;
-@use "../20-mixins/media-query" as *;
+@use "./../20-mixins/media-query.scss" as *;
 
-*,
-*::before,
-*::after {
-  margin: 0;
-  padding: 0;
-  outline: solid 1px lightpink;
+/* 
+  Global styles 
+  Low-specificity, global styles that apply to the whole project
+*/
+
+// RESOURCES ////////////////////
+/* 
+  CUBE methodology: https://cube.fyi/css.html
+  Sizing units reference: https://web.dev/learn/css/sizing
+  Strategic unit deployment: 
+  Use rem for values that should scale (e.g., typography) 
+  and px for values that should not (e.g., borders, padding).
+  https://www.joshwcomeau.com/css/surprising-truth-about-pixels-and-accessibility/
+*/
+
+// MISC ////////////////////
+* {
+  outline: solid 1px red;
+}
+
+.bg-red {
+  // background-color: red;
 }
 
 // GLOBAL SETTINGS ////////////////////
-body {
-  // accent-color: get(palette, primary);
-  background: get(background, global);
-  color: get(color, global);
-  // font-family: get(font-family, base);
-  // font-size: get(font-size, base);
-  // font-weight: get(font-weight, normal);
-  // line-height: get(line-height, base);
-  // letter-spacing: get(letter-spacing, base);
-  word-break: break-word;
-  font-size-adjust: from-font;
-  interpolate-size: allow-keywords;
+html {
+  color-scheme: light dark;
+  scroll-behavior: smooth;
 }
 
-// DOCUMENT STRUCTURE ////////////////////
 body {
+  // Colors
+  // accent-color: var(--color-accent);
+  background-color: var(--color-global-background);
+  color: var(--color-global-text);
+
+  // Typography
+  font-size: var(--font-size-base);
+  font-family: var(--font-family-base);
+  font-weight: var(--font-weight-base);
+  line-height: var(--line-height-base);
+  font-size-adjust: from-font;
+  word-break: break-word;
+
+  // Layout and spacing
   display: grid;
   grid-template-rows: auto 1fr auto;
+  interpolate-size: allow-keywords;
+
+  // Writing direction
+  // writing-mode: vertical-lr;
+  // direction: rtl;
 }
 
-main {
-  block-size: 100%;
-}
-
-// TYPOGRAPHY ////////////////////
+// LINE HEIGHT ////////////////////
 h1,
 h2,
 h3,
-h4 {
-  // font-family: get(font-family, display);
-  // font-weight: get(font-weight, bold);
-  // line-height: get(line-height, flat);
-  // color: get(color, grayish-dark-blue);
-  // text-transform: capitalize;
+h4,
+button,
+input,
+label {
+  line-height: var(--line-height-fine);
+}
+
+// HEADINGS ////////////////////
+.heading-styles {
+  font-family: var(--font-family-base);
+  font-weight: var(--font-weight-medium);
+  letter-spacing: var(--letter-spacing-tight);
+  font-kerning: normal;
   text-wrap: balance;
   hyphens: auto;
 }
 
+h1,
+h2,
+h3,
+h4 {
+  @extend .heading-styles;
+}
+
 h1 {
-  // font-size: get(font-size, heading-1);
-  max-inline-size: 20ch;
+  font-size: var(--font-size-heading-1);
+  max-inline-size: 25ch;
 }
 
 h2 {
-  // font-size: get(font-size, heading-2);
+  font-size: var(--font-size-heading-2);
   max-inline-size: 35ch;
 }
 
 h3 {
-  // font-size: get(font-size, heading-3);
-  max-inline-size: 35ch;
+  font-size: var(--font-size-heading-3);
+  max-inline-size: 45ch;
 }
 
-h4,
-h5,
-h6 {
-  // font-size: get(font-size, 3);
+:where(h4, h5, h6) {
+  font-size: var(--font-size-heading-4);
+  max-inline-size: 55ch;
 }
 
-small {
-  // font-size: get(font-size, base);
+// TEXT ELEMENTS ////////////////////
+// Introductory or prominent text
+.lede {
+  font-size: var(--font-size-lede);
+  font-family: var(--font-family-base);
+  font-weight: var(--font-weight-medium);
+  max-inline-size: var(--measure, 66ch);
 }
 
-/* This is quite a new property, so we want code styles to at least, not be huge */
-// @supports not (font-size-adjust: from-font) {
-//   :is(code, kbd, samp) {
-//     font-size: 0.85em;
-//   }
-// }
-
-// CONTENT ELEMENTS ////////////////////
-// TEXT ELEMENTS
-p {
+// Prose for long-form content
+.prose {
   max-inline-size: var(--measure, 66ch);
   text-wrap: pretty;
 }
 
-// .lede {
-// font-size: get(font-size, 3);
-// letter-spacing: get(letter-spacing, extra-loose);
-// text-transform: uppercase;
-// color: get(color, strong-blue);
-// font-weight: get(font-weight, black);
-// }
+// Paragraph text
+// p {}
 
-// b {
-//   color: get-theme("color", "highlight");
-// }
-
-// LIST ELEMENTS
-
-// FORM ELEMENTS
-form {
-  .error {
-    position: absolute;
-    // color: get(color, bright-red);
-    inset-block-end: -1.2lh;
-    // font-size: get(font-size, -2);
-    // font-weight: get(font-weight, bold);
-    font-style: italic;
-  }
-
-  :is(.input-valid, #specBoost) {
-    // border: solid var(--border-width) get(color, slightly-desaturated-cyan);
-  }
-
-  :is(.input-error, #specBoost) {
-    // border: solid var(--border-width) get(color, bright-red);
-  }
+// Strongly important text
+strong {
+  font-weight: var(--font-weight-bold);
 }
 
-// form > * + * {
-//   margin-block-start: var(--flow-space, 1em);
-// }
+// Bold text without importance
+b {
+  font-weight: var(--font-weight-bold);
+}
 
-// :is(input, select, textarea) {
-//   accent-color: var(--color-accent);
-// }
+// Emphasized text, italic
+em {
+  font-style: italic;
+}
 
-input:not([type="checkbox"], [type="radio"], [type="color"]),
-select,
-textarea {
-  padding: 1em;
-  border: var(--input-border, solid transparent var(--border-width));
-  border-radius: var(--input-radius, var(--radius));
-  background: #e6e6e7;
-  // color: get(color, grayish-dark-blue);
+// Smaller text, fine print
+small {
+  font-size: var(--font-size-meta);
+}
+
+// Quoted sections of text
+blockquote {
+  color: var(--color-light);
+}
+
+blockquote q {
+  font-style: normal;
+}
+
+// Short inline quotations
+q {
+  quotes: "“" "”" "‘" "’";
+  font-style: italic;
+}
+
+// Horizontal rule
+hr {
+  border: none;
+  border-block-start: var(--stroke);
+  margin-block: var(--flow-space, var(--space-xl));
+}
+
+// LIST ELEMENTS ////////////////////
+
+// FORM ELEMENTS ////////////////////
+// Input styles
+:is(
+    input:not([type="checkbox"], [type="radio"], [type="color"]),
+    select,
+    textarea
+  ) {
   inline-size: 100%;
+  padding: 0.5em 0.8em;
+  border-radius: var(--radius-s);
+  border: var(--stroke-solid);
+  background: var(--color-dark-glare);
+  color: var(--color-light);
 
   &::placeholder {
-    color: #9e9ea3;
+    color: var(--color-mid);
+    opacity: 1;
   }
 }
 
-input,
-label {
-  // line-height: get(line-height, flat);
+// Apply display: flex to input[type="range"] for proper alignment
+input[type="range"] {
+  display: flex;
+  padding-inline: 0;
 }
 
-label {
-  // font-weight: get(font-weight, bold);
-  // font-size: get(font-size, -1);
+input:disabled {
+  background: var(--color-mid);
 }
 
-// label::after {
-//   content: "\A";
-//   white-space: pre;
-// }
+input:disabled,
+label input:disabled + * {
+  cursor: not-allowed;
+}
 
-// label:has(input) {
-//   display: flex;
-//   align-items: flex-start;
-//   gap: var(--space-gutter);
-// }
+// Label styles
+label {
+  font-weight: var(--font-weight-medium);
+}
 
-// label:has(input) input {
-//   transform: translateY(0.25ex);
-// }
+label::after {
+  content: "\A";
+  white-space: pre;
+}
 
-// label:has(input) + label:has(input) {
-//   --flow-space: var(--space-m);
-//   margin-block-start: var(--space-m);
-// }
+// Labels wrap checkboxes/radios for better layout and text flow
+label:has(input) {
+  display: flex;
+  align-items: baseline;
+  gap: var(--space-s);
+  font-weight: var(--font-weight-base);
+}
 
-// MEDIA ELEMENTS
-video,
-iframe[src*="youtube"],
-iframe[src*="vimeo"] {
-  display: block;
+label:has(input) + label:has(input) {
+  --flow-spce: var(--space-s-m);
+}
+
+// Slightly adjusts the vertical position of the check/radio
+label:has(input) input {
+  transform: translateY(-0.1ex);
+}
+
+// Fieldset styles
+fieldset {
+  border: var(--stroke);
+  padding: var(--space-s);
+}
+
+legend {
+  font-weight: var(--font-weight-medium);
+  padding-inline: var(--space-xs);
+}
+
+// DETAILS ELEMENTS ////////////////////
+summary {
+  font-weight: var(--font-weight-bold);
+  cursor: pointer;
+}
+
+details[open] summary {
+  margin-block-end: var(--space-s);
+}
+
+// TABLE ELEMENTS ////////////////////
+table {
+  border: var(--stroke);
+  border-collapse: collapse;
   inline-size: 100%;
-  block-size: auto;
-  aspect-ratio: 16/9;
 }
 
-// IMAGE & SVG ELEMENTS
+caption {
+  caption-side: bottom;
+  margin-block-start: var(--space-s);
+}
+
+// MEDIA ELEMENTS ////////////////////
+
+// Captions for figures
+figcaption {
+  font-size: var(--font-size-base);
+  text-align: center;
+}
+
+// SVG ELEMENTS ////////////////////
 svg:not([class]) {
   inline-size: auto;
   block-size: 1lh;
 }
 
-// TABLE ELEMENTS
-table {
-  inline-size: 100%;
-  border-collapse: collapse;
-  border: none;
+svg {
+  flex-shrink: 0;
+}
+
+svg[role="img"][width][height] {
+  inline-size: revert;
+  block-size: revert;
+  background: var(--color-light);
+  padding: var(--space-xs);
 }
 
 // INTERACTIVE ELEMENTS ////////////////////
-// A ELEMENT SPECIFICS
-a {
-  display: inline-block;
-
-  &:hover,
-  &:focus-visible {
-    text-decoration: none;
-  }
-
-  &[aria-current="page"] {
-    // color: get(color, slightly-desaturated-cyan);
-    // pointer-events: none;
-
-    &:hover,
-    &:focus-visible {
-      text-decoration: none;
-    }
-  }
+// Link styles
+a:not([class]):hover {
+  text-underline-offset: 0.2lh;
 }
 
-// BUTTON STYLES
+:is(h1, h2, h3, h4) a:not([class]) {
+  text-decoration-thickness: 0.1ex;
+  text-underline-offset: 0.2ex;
+}
+
+:is(h1, h2, h3, h4) a:not([class]):hover {
+  text-underline-offset: 0.3ex;
+}
 
 // INTERACTIVE STATES ////////////////////
-// FOCUS
-// Favour focus-visible over focus so click events don't trigger focus styles
+// Focus styles
 :focus {
   outline: none;
 }
@@ -232,26 +310,20 @@ a {
   outline-offset: var(--focus-offset, 0.2lh);
 }
 
-// Firefox requires display: inline-block for full element outline.
-// To avoid flow issues, we detect Firefox and reduce focus offset.
+// Firefox needs display: inline-block for full element outline.
 @supports (-moz-appearance: none) {
   :root {
     --focus-offset: 0.08em;
   }
 }
 
-// SELECTION
+// Selection styles
 ::selection {
-  // color: get-theme("color", "bold");
-  // background: get-color("core", "primary");
+  color: var(--color-global-background);
+  background: var(--color-global-text);
 }
 
-// TARGET
+// Target styles
 :target {
-  // scroll-margin-block: max(2ex, 5lh);
+  scroll-margin-block: 5lh;
 }
-
-// INTERFACE ELEMENTS ////////////////////
-// SKIP LINK
-
-// SCROLLBAR ////////////////////

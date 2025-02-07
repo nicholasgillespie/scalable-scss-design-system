@@ -1,46 +1,54 @@
-/*
- * FILE: font-family.scss
- *
- * This file defines the font families used in the project.
- *
- * Each array of fonts creates a priority-based order. The first font in the 
- * array should be the ideal font, followed by sensible, web-safe fallbacks.
- *
- * Fonts are categorized into three groups: display (headings), accent 
- * (subheadings, lede), and base (body).
- */
-
 $token: (
   "title": "Font Family",
   "description": "Defines font families with priority-based fallbacks.",
   "items": (
     (
+      // Base font for body text and general content
       "name": "Base",
       "value": (
-        "Space Mono",
-        "monospace",
-      ),
+        "-apple-system",
+        "BlinkMacSystemFont",
+        "avenir next",
+        "avenir",
+        "segoe ui",
+        "helvetica neue",
+        "helvetica",
+        "Cantarell",
+        "Ubuntu",
+        "roboto",
+        "noto",
+        "arial",
+        "sans-serif"
+      )
     ),
     (
+      // Font for headings and display text
       "name": "Display",
       "value": (
-        "Space Mono",
-        "monospace",
-      ),
+        "Iowan Old Style",
+        "Apple Garamond",
+        "Baskerville",
+        "Times New Roman",
+        "Droid Serif",
+        "Times",
+        "Source Serif Pro",
+        "serif",
+        "Apple Color Emoji",
+        "Segoe UI Emoji",
+        "Segoe UI Symbol"
+      )
     ),
     (
-      "name": "Accent",
+      // Font for monospaced text
+      "name": "Mono",
       "value": (
-        "Space Mono",
-        "monospace",
-      ),
+        "Menlo",
+        "Consolas",
+        "Monaco",
+        "Liberation Mono",
+        "Lucida Console",
+        "monospace"
+      )
     ),
-    // (
-    //   "name": "Mono",
-    //   "value": (
-    //     "Space Mono",
-    //     "monospace",
-    //   ),
-    // ),,,
   ),
 );

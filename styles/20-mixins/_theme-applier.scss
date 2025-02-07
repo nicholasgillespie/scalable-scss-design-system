@@ -17,57 +17,49 @@
  * - $token-type: Maps different token types and their associated keys.
  * - $exception-exclude-base-suffix: List of tokens excluding the base suffix from
  *   CSS custom property names.
+ * - $exception-raw-value-groups: List of groups that use raw values instead of
+ *   CSS variables.
  * - $exception-utility-properties: Defines exceptions for certain properties,
  *   allowing alternative names and modifications to the property.
  * - $custom-utility-prefixes: List of custom utility class prefixes.
  */
 
 // Import theme configuration and tokens
-@use "../00-settings/theme-config" as config;
-@use "../00-settings/color-theme" as color;
+@use "../00-settings/theme-config.scss" as config;
+@use "../00-settings/color-theme.scss" as color-theme;
 
 // Import functions for generating variables
-@use "../10-functions/select-theme" as *;
+@use "../10-functions/select-theme.scss" as *;
 @use "../10-functions/transform-color-p3" as *;
 
-// Import helper functions
-@use "../10-functions/helpers/handle-string" as help-str;
+// Import Sass modules and helper functions
+@use "sass:map";
+@use "sass:list";
+@use "sass:string";
+@use "sass:meta";
+@use "../10-functions/helpers/handle-string.scss" as help-str;
 
 // Define token types and their associated keys
 $token-type: (
-  "global": (
-    "palette",
-    "shadow",
-    "spacing",
-    "step-size",
-    "font-family",
-    "font-weight",
-    "line-height",
-    "letter-spacing",
-    "radius",
-    "layout",
-    "measure",
-  ),
-  "contextual-generic": (
-    "theme",
-    "text-size",
-    "space-gutter",
-    "space-region",
-  ),
-  "component-specific": (),
-  "contextual-content": (),
+  // "global": (),
+  "contextual-generic":
+    ("color-theme", "font-size", "space-gutter", "space-region"),
+  // "component-specific": (),
+  // "contextual-content": (),
 );
 
 // List of tokens excluding the base suffix from CSS custom property names
 $exception-exclude-base-suffix: (
-  "shadow",
-  "line-height",
-  "letter-spacing",
-  "radius",
-  "measure",
   "space-gutter",
-  "space-region"
+  "space-region",
+  "border",
+  "border-radius",
+  "transition"
 );
+
+// List of groups that use raw values instead of CSS variables
+// For tokens using shorthand properties that include properties which could be overwritten.
+$exception-raw-value-groups: ("border");
 
 // Define exceptions for properties, allowing alternative names and mods
 $exception-utility-properties: (
@@ -79,60 +71,66 @@ $exception-utility-properties: (
     "alt-name": "background",
     "alt-property": "background-color",
   ),
-  "box-shadow": (
-    "alt-name": "shadow",
-    "alt-property": "box-shadow",
-  ),
-  "border-color": (
-    "alt-name": "border",
-    "alt-property": "border-color",
-  ),
-  "font-size": (
-    "alt-name": "text-size",
-    "alt-property": "font-size",
-  ),
-  "font-family": (
-    "alt-name": "font",
-    "alt-property": "font-family",
+  "border-radius": (
+    "alt-name": "radius",
+    "alt-property": "border-radius",
   ),
 );
 
 // List of custom utility class prefixes
 $custom-utility-prefixes: (
-  "space-box",
-  "space-cluster",
-  "space-columns",
-  "space-cover",
-  "space-flow",
-  "space-grid",
+  // "space-box",
+  // "space-cluster",
+  // "space-columns",
+  // "space-cover",
+  // "space-flow",
+  // "space-grid",
+  // "space-repel",
+  // "space-sidebar",
+  // "space-stack",
+  // "space-switcher",
+  // "space-wrapper",
   "space-gutter",
-  "space-region",
-  "space-repel",
-  "space-sidebar",
-  "space-stack",
-  "space-switcher"
+  "space-region"
 );
-
-// Retrieve the class type prefix for utilities
-$class-type-prefix: map-get(config.$class-type-prefixes, utilities);
 
 /**
  * Mixin: generateThemeVariables
  * Applies tokens for a specified type or all types if no type is specified.
  *
- * @param {String|null} $type - Type of tokens to apply (e.g., "global", "ctx").
+ * @param {String|null} $type - Type of tokens to apply (e.g., "global",
+ *                              "contextual-generic"). If "global" is passed,
+ *                              generates all tokens that don't have a type.
+ *                              If a specific type is passed, generates only
+ *                              the tokens for that type. If no type is passed,
+ *                              generates all tokens as they come.
  */
 @mixin generateThemeVariables($type: null) {
-  @each $current-type, $keys in $token-type {
-    // Check if $type is null or matches the current type
-    @if $type == null or $type == $current-type {
-      @each $group in config.$groups {
-        $group-token-key: map-get($group, "key");
+  @each $group in config.$groups {
+    $group-key: map.get($group, "key");
 
-        // Check if $group-token-key exists in $token-type under $type
-        @if index($keys, $group-token-key) {
-          @include generateTokenVariables($group-token-key);
+    @if $type == null {
+      // Generate all tokens as they come
+      @include generateTokenVariables($group-key);
+    } @else if $type == "global" {
+      // Generate all tokens that don't have a type
+      $isInType: false;
+      @if meta.variable-exists(token-type) {
+        @each $current-type, $keys in $token-type {
+          @if list.index($keys, $group-key) {
+            $isInType: true;
+          }
         }
+      }
+      @if not $isInType {
+        @include generateTokenVariables($group-key);
+      }
+    } @else {
+      // Generate only the tokens for the specified type
+      @if meta.variable-exists(token-type) and
+        list.index(map.get($token-type, $type), $group-key)
+      {
+        @include generateTokenVariables($group-key);
       }
     }
   }
@@ -152,26 +150,26 @@ $class-type-prefix: map-get(config.$class-type-prefixes, utilities);
   $function-arg: null
 ) {
   // Handle exceptions for the theme group-token-key
-  @if $group-token-key == "theme" {
+  @if $group-token-key == "color-theme" {
     @if $function == null {
       $function: "selectTheme";
     }
     @if $function-arg == null {
-      $first-item-name: to-lower-case(
-        nth(map-get(nth(map-get(color.$token, "items"), 1), "name"), 1)
-      );
+      $first-theme: list.nth(map.get(color-theme.$token, "items"), 1);
+      $first-theme-name: map.get($first-theme, "name");
+      $first-item-name: string.to-lower-case(list.nth($first-theme-name, 1));
       $function-arg: $first-item-name;
     }
   }
 
   // Loop through each group in the theme configuration
   @each $group in config.$groups {
-    $group-key: map-get($group, "key");
+    $group-key: map.get($group, "key");
 
     // Check if the current group matches the provided token key
     @if $group-key == $group-token-key {
-      $group-prefix: help-str.slugify(map-get($group, "prefix"));
-      $items: map-get(config.$theme, $group-token-key);
+      $group-prefix: help-str.slugify(map.get($group, "prefix"));
+      $items: map.get(config.$theme, $group-token-key);
 
       // Loop through each item in the token
       @each $item-name, $item-value in $items {
@@ -179,17 +177,17 @@ $class-type-prefix: map-get(config.$class-type-prefixes, utilities);
         $result: null;
 
         // Apply function if provided and exists
-        @if $function and function-exists($function) {
-          $result: call(
-            get-function($function),
+        @if $function and meta.function-exists($function) {
+          $result: meta.call(
+            meta.get-function($function),
             $item-name,
             $item-value,
-            if($function-arg != null, to-lower-case($function-arg), null)
+            if($function-arg != null, string.to-lower-case($function-arg), null)
           );
         } @else {
           // Warn if function not found, return item name and value without fn
-          @if $function and not function-exists($function) {
-            @warn "Invalid function `#{$function}`.";
+          @if $function and not meta.function-exists($function) {
+            @debug "Invalid function `#{$function}`.";
           }
           $result: (
             name: $item-name,
@@ -199,14 +197,14 @@ $class-type-prefix: map-get(config.$class-type-prefixes, utilities);
 
         // Check if $result is not null
         @if $result != null {
-          $item-name: map-get($result, "name");
-          $item-value: map-get($result, "value");
+          $item-name: map.get($result, "name");
+          $item-value: map.get($result, "value");
 
           // Generate CSS custom properties, handling base exceptions
           @if $item-value != null {
             @if $item-name ==
               "base" and
-              index($exception-exclude-base-suffix, $group-token-key)
+              list.index($exception-exclude-base-suffix, $group-token-key)
             {
               --#{$group-prefix}: #{$item-value};
             } @else {
@@ -226,136 +224,123 @@ $class-type-prefix: map-get(config.$class-type-prefixes, utilities);
 @mixin generateThemeUtilities() {
   // Loop through each group in the theme configuration
   @each $group in config.$groups {
-    $group-key: map-get($group, "key");
-    $group-prefix: map-get($group, "prefix");
-    $group-properties: map-get($group, "properties");
-    $items: map-get(config.$theme, $group-key);
+    $group-key: map.get($group, "key");
+    $group-prefix: map.get($group, "prefix");
+    $group-properties: map.get($group, "properties");
+    $items: map.get(config.$theme, $group-key);
 
-    // Check if the group has properties defined
+    // Determine exception handling conditions
+    $use-raw-values: list.index($exception-raw-value-groups, $group-key) !=
+      null;
+    $exclude-base-suffix: list.index(
+        $exception-exclude-base-suffix,
+        $group-key
+      ) !=
+      null;
+
+    // Process group properties if they exist
     @if $group-properties != null {
-      // Loop through each property in the group
       @each $group-property in $group-properties {
         $property-or-alt-name: $group-property;
         $css-property: $group-property;
 
-        // Check if the property is in exception-utility-properties
-        @if map-has-key($exception-utility-properties, $group-property) {
-          $property-or-alt-name: map-get(
-            map-get($exception-utility-properties, $group-property),
+        // Check if property has alternative definitions in exceptions
+        @if map.has-key($exception-utility-properties, $group-property) {
+          $property-or-alt-name: map.get(
+            map.get($exception-utility-properties, $group-property),
             "alt-name"
           );
-          $css-property: map-get(
-            map-get($exception-utility-properties, $group-property),
+          $css-property: map.get(
+            map.get($exception-utility-properties, $group-property),
             "alt-property"
           );
         }
 
         // Handle exceptions for specific groups
-        @if $group-key == "palette" {
-          @if $group-property == "color" {
-            @if map-has-key($exception-utility-properties, "color") {
-              $property-or-alt-name: $group-prefix;
-            }
-          }
-        }
-
-        // Generate utility classes for auto and zero spacing
-        @if $group-key == "spacing" {
-          // Uncomment to enable abbreviated property names
-          $property-or-alt-name: help-str.abbreviate(
+        @if $group-key == "scale-space" {
+          $property-or-alt-name: help-str.initialsFromWords(
             help-str.listToString($group-property, "-")
           );
 
-          .#{$class-type-prefix}#{$property-or-alt-name}-auto {
-            #{$css-property}: auto;
+          .#{$property-or-alt-name}-auto {
+            #{$css-property}: auto; // Apply auto value
           }
-          .#{$class-type-prefix}#{$property-or-alt-name}-zero {
-            #{$css-property}: 0;
-          }
-        }
-
-        // Handle exceptions for the scale-text group
-        @if $group-key == "step-size" {
-          @if $group-property == "font-size" {
-            @if map-has-key($exception-utility-properties, "font-size") {
-              $property-or-alt-name: $group-prefix;
-            }
+          .#{$property-or-alt-name}-zero {
+            #{$css-property}: 0; // Apply zero value
           }
         }
 
-        // Process theme group items
-        @if $group-key == "theme" {
-          // Extract theme names from the color.$token map
-          $themes: ();
-          @each $item in map-get(color.$token, "items") {
-            $theme-name: to-lower-case(map-get($item, "name"));
-            $themes: append($themes, $theme-name);
-          }
-
-          // Remove theme prefixes from item names
-          $processed-items: ();
-          @each $item-name, $value in $items {
-            @each $theme-name in $themes {
-              @if str-index($item-name, "#{$theme-name}-") {
-                $item-name: help-str.stringReplace(
-                  $item-name,
-                  "#{$theme-name}-",
-                  ""
-                );
-              }
-            }
-            // Merge the modified item name and value into $processed-items map
-            $processed-items: map-merge(
-              $processed-items,
-              (
-                $item-name: $value,
-              )
-            );
-          }
-          $items: $processed-items;
+        // Define prefix override for scale-step group
+        @if $group-key == "scale-step" {
+          $property-or-alt-name: $group-prefix;
         }
 
+        // Process items if they exist
         @if $items != null {
-          // Loop through each item in the token
-          @each $item-name in map-keys($items) {
-            // Handle theme group items
-            @if $group-key == "theme" {
-              $category: nth(help-str.stringToList($item-name, "-"), 1);
-              $item-name: help-str.stringTrimAfter($item-name, "-", 1);
-              $item-name-prop: nth(help-str.stringToList($item-name, "-"), 1);
+          @if $group-key == "color-theme" {
+            $first-theme: list.nth(map.get(color-theme.$token, "items"), 1);
+            $theme-values: map.get($first-theme, "value");
 
-              // Generate utility class for theme items
-              @if $property-or-alt-name == $item-name-prop {
-                // // Uncomment to see utility classes for general theme items
-                // @debug ".#{$class-type-prefix}#{$category}-#{$item-name} | #{$css-property}: var(--#{$group-prefix}-#{$category}-#{$item-name})";
-                .#{$class-type-prefix}#{$category}-#{$item-name} {
-                  #{$css-property}: var(
-                    --#{$group-prefix}-#{$category}-#{$item-name}
-                  );
+            @each $context, $context-value in $theme-values {
+              @each $context-key, $context-val in $context-value {
+                $item-name: $context-key;
+                $item-name-prop: $item-name;
+
+                // Check for modifier, split item name, and extract the first part
+                @if string.index($item-name, "--") {
+                  $parts: help-str.stringToList($item-name, "--");
+                  $item-name-prop: list.nth($parts, 1);
+                }
+
+                // Generate utility class for theme items
+                @if $property-or-alt-name == $item-name-prop {
+                  $item-name: help-str.stringReplace($item-name, "--", "-");
+
+                  // @debug ".#{$context}-#{$item-name} | #{$css-property}: var(--#{$group-prefix}-#{$item-name})";
+                  .#{$context}-#{$item-name} {
+                    #{$css-property}: var(
+                      --#{$group-prefix}-#{$context}-#{$item-name}
+                    );
+                  }
                 }
               }
-            } @else {
-              // Handle base property exceptions
-              @if $item-name ==
-                "base" and
-                index($exception-exclude-base-suffix, $group-key)
-              {
-                // // Uncomment to see utility classes for 'base' items from the token theme
-                // @debug ".#{$class-type-prefix}#{$property-or-alt-name}-base | #{$css-property}: var(--#{$group-prefix})";
-                .#{$class-type-prefix}#{$property-or-alt-name}-base {
-                  #{$css-property}: var(--#{$group-prefix});
+            }
+          } @else {
+            // General handling for other groups
+            @each $item-name, $item-value in $items {
+              @if $item-name == "base" and $exclude-base-suffix {
+                @if $use-raw-values {
+                  // @debug ".#{$property-or-alt-name} | #{$css-property}: #{$item-value}";
+                  .#{$property-or-alt-name} {
+                    #{$css-property}: #{$item-value}; // Apply raw value
+                  }
+                } @else {
+                  // @debug ".#{$property-or-alt-name} | #{$css-property}: var(--#{$group-prefix})";
+                  .#{$property-or-alt-name} {
+                    #{$css-property}: var(
+                      --#{$group-prefix}
+                    ); // Apply CSS variable
+                  }
                 }
               } @else {
-                // // Uncomment to see generated utility classes for token theme items
-                // @debug ".#{$class-type-prefix}#{$property-or-alt-name}-#{$item-name} | #{$css-property}: var(--#{$group-prefix}-#{$item-name})";
-                .#{$class-type-prefix}#{$property-or-alt-name}-#{$item-name} {
-                  #{$css-property}: var(--#{$group-prefix}-#{$item-name});
+                @if $use-raw-values {
+                  // @debug ".#{$property-or-alt-name}-#{$item-name} | #{$css-property}: #{$item-value}";
+                  .#{$property-or-alt-name}-#{$item-name} {
+                    #{$css-property}: #{$item-value}; // Use raw value
+                  }
+                } @else {
+                  // @debug ".#{$property-or-alt-name}-#{$item-name} | #{$css-property}: var(--#{$group-prefix}-#{$item-name})";
+                  .#{$property-or-alt-name}-#{$item-name} {
+                    #{$css-property}: var(
+                      --#{$group-prefix}-#{$item-name}
+                    ); // Use CSS variable
+                  }
                 }
               }
             }
           }
         } @else {
-          @warn "No items found for `#{$group-key}`.";
+          @debug "No items found for `#{$group-key}`.";
         }
       }
     }
@@ -367,34 +352,44 @@ $class-type-prefix: map-get(config.$class-type-prefixes, utilities);
  * Generates custom utility classes for theme tokens.
  */
 @mixin generateThemeSpacingUtilities() {
-  // Get the token and prefix for spacing
-  $token-name: "spacing";
-  $token: map-get(config.$theme, $token-name);
-  $token-prefix: null;
+  // Define the spacing tokens to filter from $groups
+  $spacing-tokens: ("space-region", "space-gutter");
 
-  // Find the prefix for the token
+  // Loop through the $groups variable
   @each $group in config.$groups {
-    @if map-get($group, "key") == $token-name {
-      $token-prefix: map-get($group, "prefix");
-    }
-  }
+    $token-name: map.get($group, "key");
 
-  // If the token and prefix are found, generate the custom utility classes
-  @if $token != null and $token-prefix != null {
-    @each $prefix in $custom-utility-prefixes {
-      $property: "--#{$prefix}";
+    // Check if the current group is a spacing token
+    @if list.index($spacing-tokens, $token-name) {
+      $prefix: map.get($group, "prefix");
+      $token: map.get(config.$theme, $token-name);
 
-      // // Uncomment to see generated utility classes for spacing-related theme items with zero value
-      // @debug ".#{$class-type-prefix}#{$prefix}-zero | #{$property}: 0";
-      .#{$class-type-prefix}#{$prefix}-zero {
-        #{$property}: 0;
-      }
+      // If the token and prefix are found, generate the custom utility classes
+      @if $token != null and $prefix != null {
+        $property: "--#{$token-name}";
 
-      @each $item-name, $item-value in $token {
-        // // Uncomment to see generated utility classes for spacing-related theme items in layout utilities
-        // @debug ".#{$class-type-prefix}#{$prefix}-#{$item-name} | #{$property}: var(--#{$token-prefix}-#{$item-name})";
-        .#{$class-type-prefix}#{$prefix}-#{$item-name} {
-          #{$property}: var(--#{$token-prefix}-#{$item-name});
+        // Generate the "zero" utility class
+        // @debug "[data-#{$prefix}='zero'] | #{$property}: 0";
+        [data-#{$prefix}="zero"] {
+          #{$property}: 0;
+        }
+
+        // Generate utility classes for each token item
+        @each $item-name, $item-value in $token {
+          @if $item-name ==
+            "base" and
+            list.index($exception-exclude-base-suffix, $token-name)
+          {
+            // @debug "[data-#{$prefix}='base'] | #{$property}: var(--#{$prefix})";
+            [data-#{$prefix}="base"] {
+              #{$property}: var(--#{$prefix});
+            }
+          } @else {
+            // @debug "[data-#{$prefix}='space-#{$item-name}'] | #{$property}: var(--#{$prefix}-#{$item-name})";
+            [data-#{$prefix}="space-#{$item-name}"] {
+              #{$property}: var(--#{$prefix}-#{$item-name});
+            }
+          }
         }
       }
     }

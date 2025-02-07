@@ -6,22 +6,14 @@
  * CUSTOM PROPERTIES AND CONFIGURATION
  * --center-box-sizing: Controls the box-sizing property of the .u-center class.
  * 
- * A data attribute [data-center="child-elements"] can be used to center the 
+ * A data attribute [data-center="children"] can be used to center the 
  * child elements of the selected element.
  */
 
-@use "../00-settings/theme-config" as *;
-$prefix: map-get($class-type-prefixes, layouts);
-
-.#{$prefix}center {
-  box-sizing: var(--center-box-sizing, content-box);
+.center {
   margin-inline: auto;
   text-align: center;
-  max-inline-size: var(--measure);
-
-  &[data-center="child-elements"] {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-  }
+  display: flex;
+  flex-direction: column;
+  align-items: center;
 }

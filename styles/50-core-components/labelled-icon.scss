@@ -1,0 +1,11 @@
+.labelled-icon {
+  display: flex;
+  align-items: baseline;
+  line-height: var(--line-height-fine);
+  gap: 0 var(--gutter);
+}
+
+.labelled-icon svg {
+  block-size: 1lh;
+  transform: translateY(0.5ex);
+}

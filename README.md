@@ -10,7 +10,6 @@ This system uses layout classes from [Every Layout](https://every-layout.dev/), 
 
 - **Design Tokens**: Centralized theme configuration for streamlined management of design tokens.
 - **Theme Application**: Generates CSS variables from design tokens for consistent theming.
-- **Theme Access**: Provides a function for retrieving CSS variables corresponding to design tokens based on specified properties and values.
 - **Theme Utilities**: Includes utility classes derived from the theme configuration for efficient styling.
 - **Layout Classes**: Versatile, composable classes for responsive designs from [Every Layout](https://every-layout.dev/).
 
@@ -34,18 +33,16 @@ styles
 ├─ 00-settings
 │  ├─ _theme-config.scss        # Centralizes design tokens and configuration.
 │  └─ ...                       # Token files (e.g., colors, spacing, font-size)
-├─ 10-functions
-│  ├─ _theme-accessor.scss      # Function for retrieving token values.
-│  └─ ...                       # Other utility functions for formatting, clamping, etc.
+├─ 10-functions                 # Functions for formatting, clamping, etc.
 ├─ 20-mixins
 │  ├─ _theme-applier.scss       # Mixins for generating CSS variables and utility classes.
 │  └─ media-query.scss          # Mixin for theme-based media queries.
 ├─ 30-base                      # Base styles (e.g., reset, root, global styles).
 ├─ 40-layouts                   # Layout-related styles.
 ├─ 50-core-components           # Core UI components.
-├─ 60-advanced-components       # More complex UI components.
+├─ 60-enhanced-components       # More complex UI components.
 ├─ 70-third-party-plugins       # Styles for third-party plugins.
-├─ 80-templates                 # Templates for specific pages or sections.
+├─ 80-page-specific             # Templates for specific pages or sections.
 ├─ 90-utilities                 # Utility classes generated from design tokens.
 ├─ advanced.scss                # SCSS entry point for advanced features.
 ├─ core.scss                    # SCSS entry point for core styles.
@@ -54,19 +51,19 @@ styles
 
 ### Detailed Breakdown:
 
-- **[00-settings](./styles/00-settings)**: Contains [`_theme-config.scss`](./styles/00-settings/_theme-config.scss) for centralized theme tokens and configuration.
-- **[10-functions](./styles/10-functions)**: Includes [`_theme-accessor.scss`](./styles/10-functions/_theme-accessor.scss) for accessing token values and utility functions.
-- **[20-mixins](./styles/20-mixins)**: Features [`_theme-applier.scss`](./styles/20-mixins/_theme-applier.scss) for generating CSS variables and [`media-query.scss`](./styles/20-mixins/media-query.scss) for responsive design.
-- **[30-base](./styles/30-base)**: For global styles including resets, typography, and root styles.
-- **[40-layouts](./styles/40-layouts)**: Includes layout styles like grids and spacing utilities.
-- **[50-core-components](./styles/50-core-components)**: Core UI components such as buttons and forms.
-- **[60-advanced-components](./styles/60-advanced-components)**: Advanced components building on core styles.
-- **[70-third-party-plugins](./styles/70-third-party-plugins)**: Styles for third-party plugins and libraries.
-- **[80-templates](./styles/80-templates)**: Styles for page and section templates.
-- **[90-utilities](./styles/90-utilities)**: Auto-generated utility classes from design tokens.
-- **[advanced.scss](./styles/advanced.scss)**: Main entry point for advanced features.
-- **[core.scss](./styles/core.scss)**: Main entry point for core styles.
-- **[print.scss](./styles/print.scss)**: Styles for print media.
+- **[00-settings](./00-settings)**: Contains [`_theme-config.scss`](./00-settings/_theme-config.scss) for centralized theme tokens and configuration.
+- **[10-functions](./10-functions)**: Includes [`_theme-accessor.scss`](./10-functions/_theme-accessor.scss) for accessing token values and utility functions.
+- **[20-mixins](./20-mixins)**: Features [`_theme-applier.scss`](./20-mixins/_theme-applier.scss) for generating CSS variables and [`media-query.scss`](./20-mixins/media-query.scss) for responsive design.
+- **[30-base](./30-base)**: For global styles including resets, typography, and root styles.
+- **[40-layouts](./40-layouts)**: Includes layout styles like grids and spacing utilities.
+- **[50-core-components](./50-core-components)**: Core UI components such as buttons and forms.
+- **[60-enhanced-components](./60-enhanced-components)**: Enhanced components building on core styles.
+- **[70-third-party-plugins](./70-third-party-plugins)**: Styles for third-party plugins and libraries.
+- **[80-page-specific](./80-page-specific)**: Styles for page and section templates.
+- **[90-utilities](./90-utilities)**: Auto-generated utility classes from design tokens.
+- **[advanced.scss](./advanced.scss)**: Main entry point for advanced features.
+- **[core.scss](./core.scss)**: Main entry point for core styles.
+- **[print.scss](./print.scss)**: Styles for print media.
 
 ## Installation
 
@@ -154,26 +151,9 @@ To apply the theme to your project, generate CSS custom properties as follows:
    }
    ```
 
-### Accessing Theme Values with the `get` Function
-
-This system includes a single `get` function in `_theme-accessor.scss`, allowing dynamic application of theme values:
-
-- **Retrieve CSS Variables**: Use the `get` function to fetch the CSS variable associated with a design token:
-
-  ```scss
-  body {
-    color: get("color", "global");
-    background-color: get("background", "global");
-  }
-  ```
-
-- **Dynamic Property Application**: The `get` function supports various properties and values, ensuring alignment with the defined theme.
-
-- **Error Handling**: Provides available properties and values to aid debugging and maintain design integrity.
-
 ### Generating Utility Classes
 
-To generate utility classes, add the necessary mixins to the [`90-utilities/_index.scss`](./styles/90-utilities/_index.scss) file:
+To generate utility classes, add the necessary mixins to the [`90-utilities/_index.scss`](./90-utilities/_index.scss) file:
 
 ```scss
 @use "../20-mixins/theme-applier" as *;
@@ -191,13 +171,13 @@ To generate utility classes, add the necessary mixins to the [`90-utilities/_ind
 After generating the utility classes, apply them directly in your HTML. For instance, if your design tokens include a "primary" color:
 
 ```scss
-.u-color-primary {
+.color-primary {
   color: var(--color-primary);
 }
 ```
 
 ```html
-<p class="u-color-primary">This text is styled with the primary color.</p>
+<p class="color-primary">This text is styled with the primary color.</p>
 ```
 
 **Considerations**

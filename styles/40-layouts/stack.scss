@@ -16,10 +16,7 @@
  * evenly in the vertical space after the second item.
  */
 
-@use "../00-settings/theme-config" as *;
-$prefix: map-get($class-type-prefixes, layouts);
-
-.#{$prefix}stack {
+.stack {
   display: flex;
   flex-direction: column;
   justify-content: var(--stack-vertical-alignment, flex-start);
@@ -30,6 +27,9 @@ $prefix: map-get($class-type-prefixes, layouts);
   }
 
   & > * + * {
-    margin-block-start: var(--space-stack, calc(var(--leading) * 1rem));
+    margin-block-start: var(
+      --stack-space,
+      calc(var(--line-height-base) * 1rem)
+    );
   }
 }

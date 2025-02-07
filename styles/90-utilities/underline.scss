@@ -1,9 +1,12 @@
-@use "../00-settings/theme-config" as *;
-$prefix: map-get($class-type-prefixes, utilities);
+/*
+ * UNDERLINE
+ * A utility that applies an underline decoration to text.
+ * Info: https://www.youtube.com/watch?v=x3MTfp3HDLc
+ */
 
-.#{$prefix}underline {
+.underline {
   text-decoration-line: underline;
-  text-decoration-color: var(--color-green);
+  text-decoration-color: hotpink;
   text-decoration-style: solid;
   text-decoration-thickness: 0.25ex;
   text-underline-offset: 0.3ex;

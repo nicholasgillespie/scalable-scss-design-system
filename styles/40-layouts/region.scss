@@ -3,18 +3,9 @@
  * A layout that provides consistent block padding for page sections.
  * 
  * CUSTOM PROPERTIES AND CONFIGURATION
- * --region-padding: The padding of the region. Default is var(--space-gutter).
+ * --region-padding: The padding of the region. Default is var(--gutter).
  */
 
-@use "../00-settings/theme-config" as *;
-$prefix: map-get($class-type-prefixes, layouts);
-
-.#{$prefix}region {
-  padding-block: var(--space-region, var(--space-gutter));
+.region {
+  padding-block: var(--region-space, var(--space-region));
 }
-
-// .block {
-//   --space-region: get("region", "m");
-//   --space-region: get("space", "m");
-//   --space-gutter: get("gap", "m"); //
-// }

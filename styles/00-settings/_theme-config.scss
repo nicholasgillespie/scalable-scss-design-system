@@ -10,121 +10,95 @@
  * VARIABLES:
  * - $theme: A map consolidating all processed tokens.
  * - $groups: Defines token groups with keys, prefixes, and properties.
- * - $class-type-prefixes: Defines prefixes for different class types.
+ * - $viewport: Processed viewport tokens.
+ * - $unit-type: Unit for wrapper, breakpoints, media-queries, clamp processing.
  * 
  * The $groups map is crucial for organizing tokens, generating CSS custom
  * properties, creating utility classes, and retrieving values using the `get`
  * function in the `10-functions/_theme-accessor.scss` file. Each group includes:
- * - key: Identifies the token group (e.g., "palette", "theme").
+ * - key: Identifies the token group (e.g., "color-palette", "color-theme").
  * - prefix: Generates CSS variable names (e.g., "color", "space").
  * - properties: Specifies CSS properties for utility classes and retrieval.
  */
 
 // Import design tokens
-@use "./viewport" as viewport;
-@use "./box-shadow" as shadow;
-@use "./color-palette" as palette;
-@use "./color-theme" as color;
-@use "./spacing" as spacing;
-@use "./step-size" as step-size;
-@use "./font-size" as font-size;
+@use "./viewport.scss" as viewport;
+@use "./scale-space.scss" as scale-space;
+@use "./space-gutter.scss" as space-gutter;
+@use "./space-region.scss" as space-region;
+@use "./scale-step.scss" as scale-step;
+// @use "./inline-size.scss" as inline-size;
+@use "./font-size.scss" as font-size;
 @use "./font-family.scss" as font-family;
 @use "./font-weight.scss" as font-weight;
-@use "./line-height" as line-height;
-@use "./letter-spacing" as letter-spacing;
-@use "./radius.scss" as radius;
-@use "./measure" as measure;
-@use "./space-gutter" as space-gutter;
-@use "./space-region" as space-region;
+@use "./line-height.scss" as line-height;
+@use "./letter-spacing.scss" as letter-spacing;
+@use "./border.scss" as border;
+@use "./border-radius.scss" as border-radius;
+@use "./transition.scss" as transition;
+// @use "./box-shadow.scss" as box-shadow;
+@use "./color-palette.scss" as color-palette;
+@use "./color-theme.scss" as color-theme;
 
-// Import functions
-@use "../10-functions/process-token" as *;
-@use "../10-functions/process-clamp" as *;
+// Import Sass modules and functions
+@use "sass:list";
+@use "sass:map";
+@use "../10-functions/process-token.scss" as *;
+@use "../10-functions/process-clamp.scss" as *;
+@use "../10-functions/helpers/handle-list.scss" as help-lst;
+@use "../10-functions/helpers/provide-value.scss" as help-pvd;
 
-// Import helper functions
-@use "../10-functions/helpers/handle-list" as help-lst;
-@use "../10-functions/helpers/handle-string" as help-str;
-@use "../10-functions/helpers/handle-number" as help-num;
-@use "../10-functions/helpers/provide-value" as help-pvd;
-
-// Format token items
+// Format viewport token items for layout values and clamp processing
 $viewport: processToken(viewport.$token);
-$palette: processToken(palette.$token);
-$shadow: processToken(shadow.$token);
-$color: processToken(color.$token);
-$spacing: processToken(processClamp(spacing.$token, $viewport));
-$step-size: processToken(processClamp(step-size.$token, $viewport));
-$font-size: processToken(font-size.$token);
-$font-family: processToken(font-family.$token);
-$font-weight: processToken(font-weight.$token);
-$line-height: processToken(line-height.$token);
-$letter-spacing: processToken(letter-spacing.$token);
-$radius: processToken(radius.$token);
-$measure: processToken(measure.$token);
-$space-gutter: processToken(space-gutter.$token);
-$space-region: processToken(space-region.$token);
-
-// Unit of measurement used in the theme
-$unit: "rem";
+$unit-type: "rem"; // Unit for wrapper, breakpoints, media-queries and clamp processing
 
 // Consolidate tokens into a centralized map
 $theme: (
   "layout": (
-    "base-max": #{map-get($viewport, "max")}#{$unit},
+    "min": #{map.get($viewport, "min")}#{$unit-type},
+    "max": #{map.get($viewport, "max")}#{$unit-type},
   ),
   "breakpoints": (
-    "mobile": #{map-get($viewport, "min")}#{$unit},
-    "tablet": #{map-get($viewport, "mid")}#{$unit},
-    "desktop": #{map-get($viewport, "lrg")}#{$unit},
-    "widescreen": #{map-get($viewport, "max")}#{$unit},
+    "mobile": "#{40}#{$unit-type}",
+    "tablet": "#{48}#{$unit-type}",
+    "laptop": "#{64}#{$unit-type}",
+    "desktop": "#{80}#{$unit-type}",
+    "widescreen": "#{96}#{$unit-type}",
   ),
-  "palette": $palette,
-  "shadow": $shadow,
-  "theme": $color,
-  "spacing": $spacing,
-  "step-size": $step-size,
-  "text-size": $font-size,
-  "font-family": $font-family,
-  "font-weight": $font-weight,
-  "line-height": $line-height,
-  "letter-spacing": $letter-spacing,
-  "radius": $radius,
-  "measure": $measure,
-  "space-gutter": $space-gutter,
-  "space-region": $space-region,
+  "scale-space":
+    processToken(processClamp(scale-space.$token, $viewport, $unit-type)),
+  "space-gutter": processToken(space-gutter.$token),
+  "space-region": processToken(space-region.$token),
+  "scale-step":
+    processToken(processClamp(scale-step.$token, $viewport, $unit-type)),
+  // "inline-size": processToken(inline-size.$token)
+  "font-size": processToken(font-size.$token),
+  "font-family": processToken(font-family.$token),
+  "font-weight": processToken(font-weight.$token),
+  "line-height": processToken(line-height.$token),
+  "letter-spacing": processToken(letter-spacing.$token),
+  "border": processToken(border.$token),
+  "border-radius": processToken(border-radius.$token),
+  "transition": processToken(transition.$token),
+  // "box-shadow": processToken(box-shadow.$token),
+  "color-palette": processToken(color-palette.$token),
+  "color-theme": processToken(color-theme.$token),
 );
 
 // Define token groups
+// Define global tokens before contextual ones using them. Shorthand tokens
+// must precede others using their properties, e.g., border and border-color.
 $groups: (
   (
-    key: "palette",
-    prefix: "color",
-    properties: (
-      "color",
-      "background-color",
-    ),
+    key: "layout",
+    prefix: "layout",
+    properties: (),
   ),
   (
-    key: "shadow",
-    prefix: "shade",
-    properties: (
-      "box-shadow",
-    ),
-  ),
-  (
-    key: "theme",
-    prefix: "color",
-    properties: (
-      "color",
-      "background-color",
-      "box-shadow",
-    ),
-  ),
-  (
-    key: "spacing",
+    key: "scale-space",
     prefix: "space",
     properties:
-      join(
+      list.join(
         help-lst.prefixItems("margin", help-pvd.logicalSuffixes()),
         help-lst.prefixItems("padding", help-pvd.logicalSuffixes()),
         comma
@@ -141,71 +115,106 @@ $groups: (
     properties: (),
   ),
   (
-    key: "step-size",
+    key: "scale-step",
     prefix: "step-size",
     properties: (
       "font-size",
     ),
   ),
   (
-    key: "text-size",
-    prefix: "text-size",
+    key: "font-size",
+    prefix: "font-size",
     properties: (
       "font-size",
     ),
   ),
   (
     key: "font-family",
-    prefix: "font",
+    prefix: "font-family",
     properties: (
       "font-family",
     ),
   ),
   (
     key: "font-weight",
-    prefix: "font",
+    prefix: "font-weight",
     properties: (
       "font-weight",
     ),
   ),
   (
     key: "line-height",
-    prefix: "leading",
+    prefix: "line-height",
     properties: (
       "line-height",
     ),
   ),
   (
     key: "letter-spacing",
-    prefix: "kerning",
+    prefix: "letter-spacing",
     properties: (
       "letter-spacing",
     ),
   ),
   (
-    key: "radius",
-    prefix: "radius",
+    key: "border",
+    prefix: "border",
+    properties: (
+      "border",
+    ),
+  ),
+  (
+    key: "border-radius",
+    prefix: "border-radius",
     properties: (
       "border-radius",
     ),
   ),
+  // (
+  //   key: "box-shadow",
+  //   prefix: "box-shadow",
+  //   properties: (
+  //     "box-shadow",
+  //   ),
+  // ),
+  // (
+  //   key: "inline-size",
+  //   prefix: "measure",
+  //   properties: (
+  //     "max-inline-size",
+  //   ),
+  // ),
+  // (
+  //     key: "transition",
+  //     prefix: "transition",
+  //     properties: (
+  //       "transition",
+  //     ),
+  //   ),
   (
-    key: "measure",
-    prefix: "measure",
-    properties: (
-      "max-inline-size",
+      key: "color-palette",
+      prefix: "color",
+      properties: (
+        "color",
+        "background-color",
+        "border-color",
+      ),
     ),
-  ),
   (
-    key: "layout",
-    prefix: "layout",
-    properties: (),
+    key: "color-theme",
+    prefix: "color",
+    properties: (
+      "color",
+      "background",
+      "border-color",
+      // "box-shadow",
+    ),
   )
 );
 
-// Define class type prefixes
-$class-type-prefixes: (
-  layouts: "l-",
-  components: "",
-  utilities: "u-",
-);
+// Previously used to define class type prefixes in an earlier system version.
+// $class-type-prefixes: (
+//   layouts: "l-",
+//   components: "",
+//   utilities: "u-",
+// );

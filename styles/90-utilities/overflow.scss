@@ -6,10 +6,7 @@
  * Info: https://www.youtube.com/watch?v=72pUm4tQesw
  */
 
-@use "../00-settings/theme-config" as *;
-$prefix: map-get($class-type-prefixes, utilities);
-
-.#{$prefix}overflow {
+.overflow {
   overflow-x: clip;
-  overflow-y: visible;
+  overflow-y: hidden;
 }
