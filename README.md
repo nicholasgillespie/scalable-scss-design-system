@@ -51,19 +51,19 @@ styles
 
 ### Detailed Breakdown:
 
-- **[00-settings](./00-settings)**: Contains [`_theme-config.scss`](./00-settings/_theme-config.scss) for centralized theme tokens and configuration.
-- **[10-functions](./10-functions)**: Includes [`_theme-accessor.scss`](./10-functions/_theme-accessor.scss) for accessing token values and utility functions.
-- **[20-mixins](./20-mixins)**: Features [`_theme-applier.scss`](./20-mixins/_theme-applier.scss) for generating CSS variables and [`media-query.scss`](./20-mixins/media-query.scss) for responsive design.
-- **[30-base](./30-base)**: For global styles including resets, typography, and root styles.
-- **[40-layouts](./40-layouts)**: Includes layout styles like grids and spacing utilities.
-- **[50-core-components](./50-core-components)**: Core UI components such as buttons and forms.
-- **[60-enhanced-components](./60-enhanced-components)**: Enhanced components building on core styles.
-- **[70-third-party-plugins](./70-third-party-plugins)**: Styles for third-party plugins and libraries.
-- **[80-page-specific](./80-page-specific)**: Styles for page and section templates.
-- **[90-utilities](./90-utilities)**: Auto-generated utility classes from design tokens.
-- **[advanced.scss](./advanced.scss)**: Main entry point for advanced features.
-- **[core.scss](./core.scss)**: Main entry point for core styles.
-- **[print.scss](./print.scss)**: Styles for print media.
+- **[00-settings](./styles/00-settings)**: Contains [`_theme-config.scss`](./styles/00-settings/_theme-config.scss) for centralized theme tokens and configuration.
+- **[10-functions](./styles/10-functions)**: Includes functions for processing tokens, generating clamp values, and other utility functions.
+- **[20-mixins](./styles/20-mixins)**: Features [`_theme-applier.scss`](./styles/20-mixins/_theme-applier.scss) for generating CSS variables and [`media-query.scss`](./styles/20-mixins/media-query.scss) for responsive design.
+- **[30-base](./styles/30-base)**: For global styles including resets, typography, and root styles.
+- **[40-layouts](./styles/40-layouts)**: Includes layout styles like grids and spacing utilities.
+- **[50-core-components](./styles/50-core-components)**: Core UI components such as buttons and forms.
+- **[60-enhanced-components](./styles/60-enhanced-components)**: Enhanced components building on core styles.
+- **[70-third-party-plugins](./styles/70-third-party-plugins)**: Styles for third-party plugins and libraries.
+- **[80-page-specific](./styles/80-page-specific)**: Styles for page and section templates.
+- **[90-utilities](./styles/90-utilities)**: Auto-generated utility classes from design tokens.
+- **[advanced.scss](./styles/advanced.scss)**: Main entry point for advanced features.
+- **[core.scss](./styles/core.scss)**: Main entry point for core styles.
+- **[print.scss](./styles/print.scss)**: Styles for print media.
 
 ## Installation
 
@@ -153,7 +153,7 @@ To apply the theme to your project, generate CSS custom properties as follows:
 
 ### Generating Utility Classes
 
-To generate utility classes, add the necessary mixins to the [`90-utilities/_index.scss`](./90-utilities/_index.scss) file:
+To generate utility classes, add the necessary mixins to the [`90-utilities/_index.scss`](./styles/90-utilities/_index.scss) file:
 
 ```scss
 @use "../20-mixins/theme-applier" as *;
