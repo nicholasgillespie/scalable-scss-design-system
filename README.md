@@ -44,8 +44,8 @@ styles
 ├─ 70-third-party-plugins       # Styles for third-party plugins.
 ├─ 80-page-specific             # Templates for specific pages or sections.
 ├─ 90-utilities                 # Utility classes generated from design tokens.
-├─ enhanced.scss                # SCSS entry point for enhanced features.
 ├─ core.scss                    # SCSS entry point for core styles.
+├─ enhanced.scss                # SCSS entry point for enhanced features.
 └─ print.scss                   # Print-specific styles.
 ```
 
