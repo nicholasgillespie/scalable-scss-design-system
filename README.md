@@ -61,8 +61,8 @@ styles
 - **[70-third-party-plugins](./styles/70-third-party-plugins)**: Styles for third-party plugins and libraries.
 - **[80-page-specific](./styles/80-page-specific)**: Styles for page and section templates.
 - **[90-utilities](./styles/90-utilities)**: Auto-generated utility classes from design tokens.
-- **[enhanced.scss](./styles/enhanced.scss)**: Main entry point for enhanced features.
 - **[core.scss](./styles/core.scss)**: Main entry point for core styles.
+- **[enhanced.scss](./styles/enhanced.scss)**: Main entry point for enhanced features.
 - **[print.scss](./styles/print.scss)**: Styles for print media.
 
 ## Installation
