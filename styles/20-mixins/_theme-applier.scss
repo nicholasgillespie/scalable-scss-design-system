@@ -10,8 +10,9 @@
  * - generateTokenVariables: Generates CSS custom properties for a specific token,
  *   optionally processing values with a function.
  * - generateThemeUtilities: Generates utility classes for theme tokens.
- * - generateThemeSpacingUtilities: Generates custom utility classes for theme
- *   tokens.
+ * - generateThemeSpacingUtilities:  * Generates custom utility classes for 
+ *   spacing-related theme tokens.
+
  *
  * VARIABLES:
  * - $token-type: Maps different token types and their associated keys.
@@ -21,7 +22,8 @@
  *   CSS variables.
  * - $exception-utility-properties: Defines exceptions for certain properties,
  *   allowing alternative names and modifications to the property.
- * - $custom-utility-prefixes: List of custom utility class prefixes.
+ * - $utility-spacing-tokens: List of layout utility classes and their associated
+ *   spacing tokens.
  */
 
 // Import theme configuration and tokens
@@ -58,10 +60,10 @@ $exception-exclude-base-suffix: (
 );
 
 // List of groups that use raw values instead of CSS variables
-// For tokens using shorthand properties that include properties which could be overwritten.
+// For tokens using shorthand properties that include properties which could be overwritten
 $exception-raw-value-groups: ("border");
 
-// Define exceptions for properties, allowing alternative names and mods
+// Define exceptions for properties, allowing alternative names and property modifications
 $exception-utility-properties: (
   "color": (
     "alt-name": "text",
@@ -77,21 +79,19 @@ $exception-utility-properties: (
   ),
 );
 
-// List of custom utility class prefixes
-$custom-utility-prefixes: (
-  // "space-box",
-  // "space-cluster",
-  // "space-columns",
-  // "space-cover",
-  // "space-flow",
-  // "space-grid",
-  // "space-repel",
-  // "space-sidebar",
-  // "space-stack",
-  // "space-switcher",
-  // "space-wrapper",
-  "space-gutter",
-  "space-region"
+// List of layout utility classes and their associated spacing tokens
+$utility-spacing-tokens: (
+  "scale-space": (
+    "flow",
+    "stack",
+  ),
+  "space-gutter": (
+    "cluster",
+    "wrapper",
+  ),
+  "space-region": (
+    "region",
+  ),
 );
 
 /**
@@ -296,6 +296,7 @@ $custom-utility-prefixes: (
                 @if $property-or-alt-name == $item-name-prop {
                   $item-name: help-str.stringReplace($item-name, "--", "-");
 
+                  // Generate utility class for theme items
                   // @debug ".#{$context}-#{$item-name} | #{$css-property}: var(--#{$group-prefix}-#{$item-name})";
                   .#{$context}-#{$item-name} {
                     #{$css-property}: var(
@@ -310,30 +311,30 @@ $custom-utility-prefixes: (
             @each $item-name, $item-value in $items {
               @if $item-name == "base" and $exclude-base-suffix {
                 @if $use-raw-values {
+                  // Generate utility class for base value using raw value
                   // @debug ".#{$property-or-alt-name} | #{$css-property}: #{$item-value}";
                   .#{$property-or-alt-name} {
-                    #{$css-property}: #{$item-value}; // Apply raw value
+                    #{$css-property}: #{$item-value};
                   }
                 } @else {
+                  // Generate utility class for base value using CSS variable
                   // @debug ".#{$property-or-alt-name} | #{$css-property}: var(--#{$group-prefix})";
                   .#{$property-or-alt-name} {
-                    #{$css-property}: var(
-                      --#{$group-prefix}
-                    ); // Apply CSS variable
+                    #{$css-property}: var(--#{$group-prefix});
                   }
                 }
               } @else {
                 @if $use-raw-values {
+                  // Generate utility class for other items using raw value
                   // @debug ".#{$property-or-alt-name}-#{$item-name} | #{$css-property}: #{$item-value}";
                   .#{$property-or-alt-name}-#{$item-name} {
-                    #{$css-property}: #{$item-value}; // Use raw value
+                    #{$css-property}: #{$item-value};
                   }
                 } @else {
+                  // Generate utility class for other items using CSS variable
                   // @debug ".#{$property-or-alt-name}-#{$item-name} | #{$css-property}: var(--#{$group-prefix}-#{$item-name})";
                   .#{$property-or-alt-name}-#{$item-name} {
-                    #{$css-property}: var(
-                      --#{$group-prefix}-#{$item-name}
-                    ); // Use CSS variable
+                    #{$css-property}: var(--#{$group-prefix}-#{$item-name});
                   }
                 }
               }
@@ -349,45 +350,45 @@ $custom-utility-prefixes: (
 
 /**
  * Mixin: generateThemeSpacingUtilities
- * Generates custom utility classes for theme tokens.
+ * Generates custom utility classes for spacing-related theme tokens.
  */
 @mixin generateThemeSpacingUtilities() {
-  // Define the spacing tokens to filter from $groups
-  $spacing-tokens: ("space-region", "space-gutter");
+  // Loop through the utility-spacing tokens
+  @each $token-name, $utilities in $utility-spacing-tokens {
+    $token: map.get(config.$theme, $token-name);
+    $token-prefix: null;
 
-  // Loop through the $groups variable
-  @each $group in config.$groups {
-    $token-name: map.get($group, "key");
+    // Find the prefix for the token
+    @each $group in config.$groups {
+      @if map.get($group, "key") == $token-name {
+        $token-prefix: map.get($group, "prefix");
+      }
+    }
 
-    // Check if the current group is a spacing token
-    @if list.index($spacing-tokens, $token-name) {
-      $prefix: map.get($group, "prefix");
-      $token: map.get(config.$theme, $token-name);
+    // If the token and prefix are found, generate the custom utility classes
+    @if $token != null and $token-prefix != null {
+      @each $utility in $utilities {
+        $property: "--#{$utility}-space";
 
-      // If the token and prefix are found, generate the custom utility classes
-      @if $token != null and $prefix != null {
-        $property: "--#{$token-name}";
-
-        // Generate the "zero" utility class
-        // @debug "[data-#{$prefix}='zero'] | #{$property}: 0";
-        [data-#{$prefix}="zero"] {
+        // Generate utility classes for spacing-related theme items with zero value
+        // @debug ".#{$utility}-space-zero | #{$property}: 0";
+        .#{$utility}-space-zero {
           #{$property}: 0;
         }
 
-        // Generate utility classes for each token item
         @each $item-name, $item-value in $token {
-          @if $item-name ==
-            "base" and
-            list.index($exception-exclude-base-suffix, $token-name)
-          {
-            // @debug "[data-#{$prefix}='base'] | #{$property}: var(--#{$prefix})";
-            [data-#{$prefix}="base"] {
-              #{$property}: var(--#{$prefix});
+          // Check if the item name is "base"
+          @if $item-name == "base" {
+            // Generate utility class for spacing-related theme items with base value
+            // @debug ".#{$utility}-space | #{$property}: var(--#{$token-prefix})";
+            .#{$utility}-space {
+              #{$property}: var(--#{$token-prefix});
             }
           } @else {
-            // @debug "[data-#{$prefix}='space-#{$item-name}'] | #{$property}: var(--#{$prefix}-#{$item-name})";
-            [data-#{$prefix}="space-#{$item-name}"] {
-              #{$property}: var(--#{$prefix}-#{$item-name});
+            // Generate utility classes for spacing-related theme items in layout utilities
+            // @debug ".#{$utility}-space-#{$item-name} | #{$property}: var(--#{$token-prefix}-#{$item-name})";
+            .#{$utility}-space-#{$item-name} {
+              #{$property}: var(--#{$token-prefix}-#{$item-name});
             }
           }
         }
