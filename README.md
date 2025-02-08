@@ -44,7 +44,7 @@ styles
 ├─ 70-third-party-plugins       # Styles for third-party plugins.
 ├─ 80-page-specific             # Templates for specific pages or sections.
 ├─ 90-utilities                 # Utility classes generated from design tokens.
-├─ advanced.scss                # SCSS entry point for advanced features.
+├─ enhanced.scss                # SCSS entry point for enhanced features.
 ├─ core.scss                    # SCSS entry point for core styles.
 └─ print.scss                   # Print-specific styles.
 ```
@@ -61,7 +61,7 @@ styles
 - **[70-third-party-plugins](./styles/70-third-party-plugins)**: Styles for third-party plugins and libraries.
 - **[80-page-specific](./styles/80-page-specific)**: Styles for page and section templates.
 - **[90-utilities](./styles/90-utilities)**: Auto-generated utility classes from design tokens.
-- **[advanced.scss](./styles/advanced.scss)**: Main entry point for advanced features.
+- **[enhanced.scss](./styles/enhanced.scss)**: Main entry point for enhanced features.
 - **[core.scss](./styles/core.scss)**: Main entry point for core styles.
 - **[print.scss](./styles/print.scss)**: Styles for print media.
 
@@ -95,7 +95,7 @@ After adding the design system to your project, you can start using the design t
 
 ### Importing the Styles
 
-To ensure compatibility and progressive enhancement, it's recommended to consider the [CSS Only Mustard Cut](https://github.com/Fall-Back/CSS-Mustard-Cut?tab=readme-ov-file#css-only-mustard-cut). This method conditionally serves advanced styles based on feature support while providing a basic, functional experience across all browsers. However, you are free to choose the setup that best fits your choice.
+To ensure compatibility and progressive enhancement, it's recommended to consider the [CSS Only Mustard Cut](https://github.com/Fall-Back/CSS-Mustard-Cut?tab=readme-ov-file#css-only-mustard-cut). This method conditionally serves enhanced styles based on feature support while providing a basic, functional experience across all browsers. However, you are free to choose the setup that best fits your choice.
 
 Include the styles in your HTML as follows:
 
@@ -103,11 +103,11 @@ Include the styles in your HTML as follows:
 <!-- Core Stylesheet -->
 <link rel="stylesheet" href="path/to/styles/core.scss" />
 
-<!-- Advanced Stylesheet (conditionally served) -->
+<!-- Enhanced Stylesheet (conditionally served) -->
 <link
   rel="stylesheet"
-  id="advanced-stylesheet"
-  href="path/to/styles/advanced.scss"
+  id="enhanced-stylesheet"
+  href="path/to/styles/enhanced.scss"
   media="
     only print,
     only all and (pointer: fine), only all and (pointer: coarse), only all and (pointer: none),
